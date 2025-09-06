@@ -26,12 +26,12 @@ This project is a Next.js port of the original ADR Explorer (Vite/React) that le
 ## Common Commands
 
 **Development:**
+
 - `pnpm dev` - Start development server with Turbopack
 - `pnpm build` - Build static site for production
 - `pnpm start` - Serve production build
-- `pnpm lint` - Run Biome linting
-- `pnpm lint:fix` - Fix linting issues automatically
-- `pnpm format` - Format code with Biome
+- `pnpm check` - Run Biome linting and formatting with automated fixing
+- `pnpm typecheck` - Run typescript compiler for type checking
 
 ## File Structure
 

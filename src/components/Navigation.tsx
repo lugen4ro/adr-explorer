@@ -80,12 +80,18 @@ interface SidebarProps {
 	directory: ADRDirectory;
 	isOpen: boolean;
 	onToggle: () => void;
+	width?: number;
+	onStartResize?: () => void;
+	isResizing?: boolean;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
 	directory,
 	isOpen,
 	onToggle,
+	width = 384, // Default 384px (w-96)
+	onStartResize,
+	isResizing = false,
 }) => {
 	const pathname = usePathname();
 	const { t } = useI18n();
@@ -135,11 +141,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
 			</button>
 
 			<aside
+				style={{
+					width: width,
+				}}
 				className={`
-        fixed top-16 left-0 h-[calc(100vh-4rem)] w-80 lg:w-[30vw] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 
+        fixed top-16 left-0 h-[calc(100vh-4rem)] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 
         transform transition-transform duration-300 ease-in-out z-40
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0
+        ${isResizing ? "select-none" : ""}
       `}
 			>
 				<div className="p-6 h-full overflow-y-auto">
@@ -148,6 +158,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 					</h2>
 					{renderDirectory(directory)}
 				</div>
+
+				{/* Resize handle - only on desktop */}
+				{onStartResize && (
+					<button
+						type="button"
+						aria-label="Resize sidebar"
+						className="absolute top-0 right-0 w-1 h-full cursor-col-resize bg-gray-300 dark:bg-gray-600 hover:bg-blue-500 dark:hover:bg-blue-400 transition-colors opacity-0 hover:opacity-100 hidden lg:block border-0 p-0"
+						onMouseDown={onStartResize}
+					/>
+				)}
 			</aside>
 
 			{isOpen && (

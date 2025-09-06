@@ -1,10 +1,11 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ADRRenderer } from "@/components/ADRRenderer";
 import { Navigation, Sidebar } from "@/components/Navigation";
 import { useI18n } from "@/hooks/useI18n";
+import { useResizable } from "@/hooks/useResizable";
 import type { ADR, ADRDirectory } from "@/types/adr";
 
 interface ADRPageContentProps {
@@ -17,7 +18,28 @@ export const ADRPageContent: React.FC<ADRPageContentProps> = ({
 	adr,
 }) => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const [isDesktop, setIsDesktop] = useState(false);
+	const {
+		width: sidebarWidth,
+		isResizing,
+		startResizing,
+	} = useResizable({
+		minWidth: 240, // 15rem
+		maxWidth: 640, // 40rem
+		defaultWidth: 384, // 24rem
+	});
 	const { t } = useI18n();
+
+	useEffect(() => {
+		const checkScreenSize = () => {
+			setIsDesktop(window.innerWidth >= 1024);
+		};
+
+		checkScreenSize();
+		window.addEventListener("resize", checkScreenSize);
+
+		return () => window.removeEventListener("resize", checkScreenSize);
+	}, []);
 
 	if (!adr) {
 		return (
@@ -46,9 +68,18 @@ export const ADRPageContent: React.FC<ADRPageContentProps> = ({
 					directory={directory}
 					isOpen={sidebarOpen}
 					onToggle={() => setSidebarOpen(!sidebarOpen)}
+					width={sidebarWidth}
+					onStartResize={startResizing}
+					isResizing={isResizing}
 				/>
 
-				<main className="lg:fixed lg:left-[30vw] lg:w-[70vw] lg:top-16 lg:h-[calc(100vh-4rem)] overflow-y-auto flex justify-center">
+				<main
+					style={{
+						marginLeft: isDesktop ? sidebarWidth : 0,
+						width: isDesktop ? `calc(100vw - ${sidebarWidth}px)` : "100vw",
+					}}
+					className="lg:fixed lg:top-16 lg:h-[calc(100vh-4rem)] overflow-y-auto"
+				>
 					<ADRRenderer adr={adr} />
 				</main>
 			</div>

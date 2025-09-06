@@ -8,44 +8,20 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { ADR } from "@/types/adr";
 
-interface CodeProps {
+// Proper types for react-markdown components
+type CodeProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
 	inline?: boolean;
 	className?: string;
 	children?: React.ReactNode;
-	[key: string]: unknown;
-}
+};
 
-interface TableProps {
-	children?: React.ReactNode;
-	[key: string]: unknown;
-}
-
-interface CellProps {
-	children?: React.ReactNode;
-	[key: string]: unknown;
-}
-
-interface HeadingProps {
-	children?: React.ReactNode;
-	[key: string]: unknown;
-}
-
-interface BlockquoteProps {
-	children?: React.ReactNode;
-	[key: string]: unknown;
-}
-
-interface ListProps {
-	children?: React.ReactNode;
-	[key: string]: unknown;
-}
-
-interface ImageProps {
-	src?: string;
-	alt?: string;
-	loading?: "lazy" | "eager";
-	[key: string]: unknown;
-}
+type TableProps = React.DetailedHTMLProps<React.TableHTMLAttributes<HTMLTableElement>, HTMLTableElement>;
+type CellProps = React.DetailedHTMLProps<React.TdHTMLAttributes<HTMLTableDataCellElement>, HTMLTableDataCellElement>;
+type HeadingProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>;
+type BlockquoteProps = React.DetailedHTMLProps<React.BlockquoteHTMLAttributes<HTMLQuoteElement>, HTMLQuoteElement>;
+type UListProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLUListElement>, HTMLUListElement>;
+type OListProps = React.DetailedHTMLProps<React.OlHTMLAttributes<HTMLOListElement>, HTMLOListElement>;
+type ImageProps = React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>;
 
 interface ADRRendererProps {
 	adr: ADR;
@@ -87,15 +63,21 @@ const MermaidComponent: React.FC<{ children: string }> = ({ children }) => {
 
 export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
 	const components = {
-		code: (props: CodeProps) => {
+		code: (props: any) => {
 			const { inline, className, children, ...rest } = props;
 			const match = /language-(\w+)/.exec(className || "");
 			const language = match ? match[1] : "";
-			
+
 			// Detect inline code: no className and no newlines in content
-			const isInline = inline === true || (!className && !String(children).includes('\n'));
-			
-			console.log('Code component props:', { inline, className, children: String(children), isInline });
+			const isInline =
+				inline === true || (!className && !String(children).includes("\n"));
+
+			console.log("Code component props:", {
+				inline,
+				className,
+				children: String(children),
+				isInline,
+			});
 
 			if (!isInline && language === "mermaid") {
 				return (
@@ -106,7 +88,7 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
 			}
 
 			if (isInline) {
-				console.log('Rendering inline code:', String(children));
+				console.log("Rendering inline code:", String(children));
 				return (
 					<code
 						className="bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100 px-1 py-0.5 rounded text-sm font-medium"
@@ -117,7 +99,7 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
 				);
 			}
 
-			console.log('Rendering block code:', String(children));
+			console.log("Rendering block code:", String(children));
 			return (
 				<code
 					className={`${className || ""} block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto`}
@@ -151,7 +133,7 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
 			<div className="my-4">
 				<Image
 					className="rounded-lg shadow-lg"
-					src={props.src || ""}
+					src={typeof props.src === 'string' ? props.src : ""}
 					alt={props.alt || ""}
 					width={800}
 					height={400}
@@ -183,16 +165,16 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
 				{...props}
 			/>
 		),
-		ul: (props: ListProps) => (
+		ul: (props: UListProps) => (
 			<ul className="list-disc ml-6 my-4 space-y-2" {...props} />
 		),
-		ol: (props: ListProps) => (
+		ol: (props: OListProps) => (
 			<ol className="list-decimal ml-6 my-4 space-y-2" {...props} />
 		),
 	};
 
 	return (
-		<article className="max-w-5xl mx-auto px-8 py-8">
+		<article className="max-w-5xl px-8 py-8">
 			<div className="prose prose-lg dark:prose-invert max-w-none">
 				<ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
 					{adr.content}
