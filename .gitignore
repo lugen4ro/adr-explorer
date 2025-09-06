@@ -41,4 +41,4 @@ yarn-error.log*
 next-env.d.ts
 
 # since we have temporary files here
-public/docs/adr/**/*
+content/adr/**

@@ -23,7 +23,7 @@ name: Deploy ADR Explorer
 
 on:
   push:
-    paths: ["docs/adr/**"] # NOTE: Change this if you place your adrs elsewhere
+    paths: ["doc/adr/**"] # NOTE: Change this if you place your adrs elsewhere
 
 permissions:
   contents: read
@@ -36,13 +36,13 @@ jobs:
     steps:
       - uses: lugen4ro/adr-explorer@main
         with:
-          adr-path: "docs/adr" # NOTE: Change this if you place your adrs elsewhere
+          adr-path: "doc/adr" # NOTE: Change this if you place your adrs elsewhere
       - uses: actions/deploy-pages@v4
 ```
 
 ### 3. Add ADRs
 
-Put your markdown adr files in `docs/adr/`:
+Put your markdown adr files in `doc/adr/`:
 
 ```markdown
 # ADR-001: Database Choice
@@ -60,9 +60,9 @@ Your site will be live at `https://username.github.io/repository-name/`
 
 ## Configuration
 
-| Input      | Default    | Description       |
-| ---------- | ---------- | ----------------- |
-| `adr-path` | `docs/adr` | Path to ADR files |
+| Input      | Default   | Description       |
+| ---------- | --------- | ----------------- |
+| `adr-path` | `doc/adr` | Path to ADR files |
 
 ```yaml
 - uses: lugen4ro/adr-explorer@main
