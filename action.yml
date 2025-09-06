@@ -1,0 +1,86 @@
+name: "ADR Explorer Deploy"
+description: "Deploy Architecture Decision Records using ADR Explorer visualizer"
+author: "lugen4ro"
+branding:
+  icon: "book-open"
+  color: "blue"
+
+inputs:
+  adr-path:
+    description: "Path to ADR files in the repository"
+    required: false
+    default: "docs/adr"
+  node-version:
+    description: "Node.js version to use for building"
+    required: false
+    default: "18"
+  adr-explorer-repo:
+    description: "Repository containing the ADR Explorer Next.js app"
+    required: false
+    default: "lugen4ro/adr-explorer"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout ADR files from current repo
+      uses: actions/checkout@v4
+      with:
+        path: data-repo
+
+    - name: Checkout ADR Explorer Next.js project
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.adr-explorer-repo }}
+        path: adr-explorer
+
+    - name: Copy ADR files to content directory
+      shell: bash
+      run: |
+        echo "📂 Copying ADR files from ${{ inputs.adr-path }} to adr-explorer/content/adr/"
+        mkdir -p adr-explorer/content/adr
+        if [ -d "data-repo/${{ inputs.adr-path }}" ]; then
+          cp -r data-repo/${{ inputs.adr-path }}/* adr-explorer/content/adr/ 2>/dev/null || echo "No files to copy"
+          echo "✅ ADR files copied successfully"
+          echo "Files copied:"
+          ls -la adr-explorer/content/adr/
+        else
+          echo "❌ ADR path data-repo/${{ inputs.adr-path }} not found"
+          exit 1
+        fi
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: latest
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: "pnpm"
+        cache-dependency-path: adr-explorer/pnpm-lock.yaml
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: adr-explorer
+      run: |
+        echo "📦 Installing dependencies with pnpm..."
+        pnpm install
+
+    - name: Build ADR Explorer
+      shell: bash
+      working-directory: adr-explorer
+      env:
+        GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
+      run: |
+        echo "🔨 Building ADR Explorer Next.js application..."
+        pnpm run build
+
+        echo "📊 Build completed successfully"
+        echo "Output directory contents:"
+        ls -la out/
+
+    - name: Upload Pages Artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: adr-explorer/out
