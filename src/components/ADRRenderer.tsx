@@ -88,11 +88,16 @@ const MermaidComponent: React.FC<{ children: string }> = ({ children }) => {
 export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
 	const components = {
 		code: (props: CodeProps) => {
-			const { inline, className, children } = props;
+			const { inline, className, children, ...rest } = props;
 			const match = /language-(\w+)/.exec(className || "");
 			const language = match ? match[1] : "";
+			
+			// Detect inline code: no className and no newlines in content
+			const isInline = inline === true || (!className && !String(children).includes('\n'));
+			
+			console.log('Code component props:', { inline, className, children: String(children), isInline });
 
-			if (!inline && language === "mermaid") {
+			if (!isInline && language === "mermaid") {
 				return (
 					<MermaidComponent>
 						{String(children).replace(/\n$/, "")}
@@ -100,14 +105,23 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
 				);
 			}
 
+			if (isInline) {
+				console.log('Rendering inline code:', String(children));
+				return (
+					<code
+						className="bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100 px-1 py-0.5 rounded text-sm font-medium"
+						{...rest}
+					>
+						{children}
+					</code>
+				);
+			}
+
+			console.log('Rendering block code:', String(children));
 			return (
 				<code
-					className={`${className || ""} ${
-						inline
-							? "bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm"
-							: "block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto"
-					}`}
-					{...props}
+					className={`${className || ""} block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto`}
+					{...rest}
 				>
 					{children}
 				</code>
