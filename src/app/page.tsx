@@ -1,4 +1,3 @@
-import React from "react";
 import { getAllADRs } from "@/lib/staticGeneration";
 import { HomePageContent } from "./HomePageContent";
 

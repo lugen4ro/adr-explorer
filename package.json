@@ -6,9 +6,7 @@
 		"dev": "rsync -av --delete doc/adr/ content/adr/ && next dev --turbopack",
 		"build": "next build --turbopack",
 		"start": "next start",
-		"lint": "biome check .",
-		"lint:fix": "biome check --fix .",
-		"format": "biome format ."
+		"check": "biome check --fix ."
 	},
 	"dependencies": {
 		"@tailwindcss/typography": "^0.5.16",

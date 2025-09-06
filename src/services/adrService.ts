@@ -48,7 +48,7 @@ export class ADRService {
 					}
 				}
 			}
-		} catch (error) {
+		} catch (_error) {
 			console.warn(`Failed to scan directory ${dirPath}:`, error);
 		}
 
@@ -69,7 +69,7 @@ export class ADRService {
 				content,
 				category: this.extractCategory(filePath),
 			};
-		} catch (error) {
+		} catch (_error) {
 			throw new Error(`Failed to load ADR: ${filePath}`);
 		}
 	}

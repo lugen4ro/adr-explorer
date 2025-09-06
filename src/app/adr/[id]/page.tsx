@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import React from "react";
-import { flattenADRs, getAllADRs } from "@/lib/staticGeneration";
+import { getAllADRs } from "@/lib/staticGeneration";
 import { ADRPageContent } from "./ADRPageContent";
 
 interface ADRPageProps {

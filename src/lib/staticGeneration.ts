@@ -57,7 +57,7 @@ export async function scanDirectory(
 				}
 			}
 		}
-	} catch (error) {
+	} catch (_error) {
 		console.warn(`Failed to scan directory ${dirPath}:`, error);
 	}
 
@@ -78,7 +78,7 @@ async function loadADR(filePath: string, fileName: string): Promise<ADR> {
 			content,
 			category: extractCategory(filePath),
 		};
-	} catch (error) {
+	} catch (_error) {
 		throw new Error(`Failed to load ADR: ${filePath}`);
 	}
 }

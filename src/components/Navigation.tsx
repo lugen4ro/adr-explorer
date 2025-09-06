@@ -63,7 +63,10 @@ export const Navigation: React.FC<NavigationProps> = ({ onSearch }) => {
 								</option>
 							))}
 						</select>
-						<button type="button" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+						<button
+							type="button"
+							className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+						>
 							🌓
 						</button>
 					</div>
@@ -148,12 +151,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 			</aside>
 
 			{isOpen && (
-				<div
-					role="button"
-					tabIndex={0}
+				<button
+					type="button"
 					className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
 					onClick={onToggle}
-					onKeyDown={(e) => e.key === 'Escape' && onToggle()}
+					onKeyDown={(e) => e.key === "Escape" && onToggle()}
 				/>
 			)}
 		</>
