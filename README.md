@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ADR Explorer
 
-## Getting Started
+A GitHub Action that deploys your Architecture Decision Records as a beautiful, searchable website.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- 🚀 Get started by just adding a single GitHub Actions workflow
+- 🎨 Modern dark theme
+- 📱 Mobile responsive
+
+## Quick Start
+
+### 1. Enable GitHub Pages
+
+Go to **Settings → Pages** and set source to "GitHub Actions"
+
+### 2. Add Workflow
+
+Create `.github/workflows/adr-deploy.yml`:
+
+```yaml
+name: Deploy ADR Explorer
+
+on:
+  push:
+    paths: ["docs/adr/**"] # NOTE: Change this if you place your adrs elsewhere
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: lugen4ro/adr-explorer@main
+        with:
+          adr-path: "docs/adr" # NOTE: Change this if you place your adrs elsewhere
+      - uses: actions/deploy-pages@v4
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Add ADRs
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Put your markdown adr files in `docs/adr/`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```markdown
+# ADR-001: Database Choice
 
-## Learn More
+## Status
 
-To learn more about Next.js, take a look at the following resources:
+Accepted
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Decision
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+We will use PostgreSQL...
+```
 
-## Deploy on Vercel
+Your site will be live at `https://username.github.io/repository-name/`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Configuration
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Input      | Default    | Description       |
+| ---------- | ---------- | ----------------- |
+| `adr-path` | `docs/adr` | Path to ADR files |
+
+```yaml
+- uses: lugen4ro/adr-explorer@main
+  with:
+    adr-path: "doc/arch_decisions"
+```
+
+## Supported Statuses
+
+- Proposed
+- Accepted
+- Deprecated
+- Superseded
+- Rejected
+
+## License
+
+MIT
