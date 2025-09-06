@@ -58,7 +58,7 @@ export async function scanDirectory(
 			}
 		}
 	} catch (_error) {
-		console.warn(`Failed to scan directory ${dirPath}:`, error);
+		console.warn(`Failed to scan directory ${dirPath}:`, _error);
 	}
 
 	return directory;
