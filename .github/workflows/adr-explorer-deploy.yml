@@ -3,6 +3,7 @@ name: Deploy ADR Explorer
 on:
   push:
     paths: ["doc/adr/**"] # NOTE: Change this if you place your adrs elsewhere
+  workflow_dispatch:
 
 permissions:
   contents: read
