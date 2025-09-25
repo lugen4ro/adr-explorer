@@ -16,7 +16,7 @@ Go to **Settings → Pages** and set source to "GitHub Actions"
 
 ### 2. Add Workflow
 
-Create `.github/workflows/adr-deploy.yml`:
+Create `.github/workflows/adr-explorer-deploy.yml`:
 
 ```yaml
 name: Deploy ADR Explorer
