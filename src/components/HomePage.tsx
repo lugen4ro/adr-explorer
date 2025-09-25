@@ -13,7 +13,10 @@ export const HomePage: React.FC<HomePageProps> = ({ directory }) => {
   const { t } = useI18n();
   const totalADRs =
     directory.adrs.length +
-    directory.subdirectories.reduce((sum, subdir) => sum + subdir.adrs.length, 0);
+    directory.subdirectories.reduce(
+      (sum, subdir) => sum + subdir.adrs.length,
+      0,
+    );
 
   const recentADRs = directory.adrs
     .sort((a, b) => (b.date || "").localeCompare(a.date || ""))
@@ -35,8 +38,9 @@ export const HomePage: React.FC<HomePageProps> = ({ directory }) => {
           {t("architectureDecisions")}
         </h1>
         <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl">
-          Explore and understand the architectural decisions that shape this project. Each ADR
-          documents important choices, their context, and consequences.
+          Explore and understand the architectural decisions that shape this
+          project. Each ADR documents important choices, their context, and
+          consequences.
         </p>
       </div>
 
@@ -45,7 +49,9 @@ export const HomePage: React.FC<HomePageProps> = ({ directory }) => {
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
             {t("totalAdrs")}
           </h3>
-          <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{totalADRs}</p>
+          <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+            {totalADRs}
+          </p>
         </div>
 
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
@@ -100,7 +106,11 @@ export const HomePage: React.FC<HomePageProps> = ({ directory }) => {
                     {adr.category}
                   </span>
                 )}
-                {adr.date && <p className="text-sm text-gray-500 dark:text-gray-400">{adr.date}</p>}
+                {adr.date && (
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {adr.date}
+                  </p>
+                )}
               </Link>
             ))}
           </div>
@@ -114,7 +124,10 @@ export const HomePage: React.FC<HomePageProps> = ({ directory }) => {
           </h2>
           <div className="space-y-4">
             {directory.subdirectories.map((subdir) => (
-              <div key={subdir.name} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+              <div
+                key={subdir.name}
+                className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow"
+              >
                 <h3 className="font-semibold text-gray-900 dark:text-white capitalize mb-2">
                   {subdir.name}
                 </h3>
@@ -143,7 +156,9 @@ export const HomePage: React.FC<HomePageProps> = ({ directory }) => {
 
             {directory.adrs.length > 0 && (
               <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{t("general")}</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  {t("general")}
+                </h3>
                 <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
                   {directory.adrs.length} decision
                   {directory.adrs.length !== 1 ? "s" : ""}
@@ -175,7 +190,10 @@ export const HomePage: React.FC<HomePageProps> = ({ directory }) => {
           </h2>
           <div className="space-y-4">
             {Object.entries(statusCounts).map(([status, count]) => (
-              <div key={status} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+              <div
+                key={status}
+                className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow"
+              >
                 <div className="flex justify-between items-center">
                   <span className="capitalize font-medium text-gray-900 dark:text-white">
                     {status}

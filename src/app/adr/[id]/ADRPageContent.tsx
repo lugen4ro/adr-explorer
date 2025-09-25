@@ -19,7 +19,9 @@ export const ADRPageContent: React.FC<ADRPageContentProps> = ({ adr }) => {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             {t("adrNotFound")}
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">{t("adrNotFoundMessage")}</p>
+          <p className="text-gray-600 dark:text-gray-400">
+            {t("adrNotFoundMessage")}
+          </p>
         </div>
       </div>
     );

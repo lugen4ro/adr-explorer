@@ -16,13 +16,17 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: ADRPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: ADRPageProps): Promise<Metadata> {
   const { allADRs } = await getAllADRs();
   const adr = allADRs.find((adr) => adr.id === params.id);
 
   return {
     title: adr ? `${adr.title} - ADR Explorer` : "ADR Not Found - ADR Explorer",
-    description: adr ? `Architectural Decision Record: ${adr.title}` : "ADR not found",
+    description: adr
+      ? `Architectural Decision Record: ${adr.title}`
+      : "ADR not found",
   };
 }
 

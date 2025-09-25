@@ -9,7 +9,10 @@ import remarkGfm from "remark-gfm";
 import type { ADR } from "@/types/adr";
 
 // Proper types for react-markdown components
-type CodeProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+type CodeProps = React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLElement>,
+  HTMLElement
+> & {
   inline?: boolean;
   className?: string;
   children?: React.ReactNode;
@@ -31,7 +34,10 @@ type BlockquoteProps = React.DetailedHTMLProps<
   React.BlockquoteHTMLAttributes<HTMLQuoteElement>,
   HTMLQuoteElement
 >;
-type UListProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLUListElement>, HTMLUListElement>;
+type UListProps = React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLUListElement>,
+  HTMLUListElement
+>;
 type OListProps = React.DetailedHTMLProps<
   React.OlHTMLAttributes<HTMLOListElement>,
   HTMLOListElement
@@ -87,7 +93,8 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
       const language = match ? match[1] : "";
 
       // Detect inline code: no className and no newlines in content
-      const isInline = inline === true || (!className && !String(children).includes("\n"));
+      const isInline =
+        inline === true || (!className && !String(children).includes("\n"));
 
       console.log("Code component props:", {
         inline,
@@ -97,7 +104,11 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
       });
 
       if (!isInline && language === "mermaid") {
-        return <MermaidComponent>{String(children).replace(/\n$/, "")}</MermaidComponent>;
+        return (
+          <MermaidComponent>
+            {String(children).replace(/\n$/, "")}
+          </MermaidComponent>
+        );
       }
 
       if (isInline) {
@@ -137,7 +148,10 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
       />
     ),
     td: (props: CellProps) => (
-      <td className="border border-gray-300 dark:border-gray-600 px-4 py-2" {...props} />
+      <td
+        className="border border-gray-300 dark:border-gray-600 px-4 py-2"
+        {...props}
+      />
     ),
     img: (props: ImageProps) => (
       <div className="my-4">
@@ -175,8 +189,12 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
         {...props}
       />
     ),
-    ul: (props: UListProps) => <ul className="list-disc ml-6 my-4 space-y-2" {...props} />,
-    ol: (props: OListProps) => <ol className="list-decimal ml-6 my-4 space-y-2" {...props} />,
+    ul: (props: UListProps) => (
+      <ul className="list-disc ml-6 my-4 space-y-2" {...props} />
+    ),
+    ol: (props: OListProps) => (
+      <ol className="list-decimal ml-6 my-4 space-y-2" {...props} />
+    ),
   };
 
   return (

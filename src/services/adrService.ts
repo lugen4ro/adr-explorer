@@ -14,7 +14,10 @@ export class ADRService {
     return await this.scanDirectory(docsPath, "root");
   }
 
-  private async scanDirectory(dirPath: string, name: string): Promise<ADRDirectory> {
+  private async scanDirectory(
+    dirPath: string,
+    name: string,
+  ): Promise<ADRDirectory> {
     const directory: ADRDirectory = {
       name,
       path: dirPath,
@@ -37,7 +40,10 @@ export class ADRService {
         const stat = await fs.stat(fullPath);
         if (stat.isDirectory()) {
           const subdirectory = await this.scanDirectory(fullPath, file);
-          if (subdirectory.adrs.length > 0 || subdirectory.subdirectories.length > 0) {
+          if (
+            subdirectory.adrs.length > 0 ||
+            subdirectory.subdirectories.length > 0
+          ) {
             directory.subdirectories.push(subdirectory);
           }
         }

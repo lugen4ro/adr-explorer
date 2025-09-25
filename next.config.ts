@@ -8,7 +8,9 @@ const nextConfig: NextConfig = {
   },
   // assetPrefix: "./", // ← Use relative paths
   // basePath: "/adr-test", // This is the key setting
-  basePath: process.env.GITHUB_REPOSITORY_NAME ? `/${process.env.GITHUB_REPOSITORY_NAME}` : "",
+  basePath: process.env.GITHUB_REPOSITORY_NAME
+    ? `/${process.env.GITHUB_REPOSITORY_NAME}`
+    : "",
 };
 
 export default nextConfig;

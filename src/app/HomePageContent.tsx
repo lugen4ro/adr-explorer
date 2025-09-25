@@ -8,6 +8,8 @@ interface HomePageContentProps {
   directory: ADRDirectory;
 }
 
-export const HomePageContent: React.FC<HomePageContentProps> = ({ directory }) => {
+export const HomePageContent: React.FC<HomePageContentProps> = ({
+  directory,
+}) => {
   return <HomePage directory={directory} />;
 };

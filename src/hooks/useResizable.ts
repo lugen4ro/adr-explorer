@@ -8,7 +8,11 @@ interface UseResizableOptions {
   defaultWidth: number;
 }
 
-export const useResizable = ({ minWidth, maxWidth, defaultWidth }: UseResizableOptions) => {
+export const useResizable = ({
+  minWidth,
+  maxWidth,
+  defaultWidth,
+}: UseResizableOptions) => {
   const [width, setWidth] = useState<number | null>(null);
   const [isResizing, setIsResizing] = useState(false);
 
