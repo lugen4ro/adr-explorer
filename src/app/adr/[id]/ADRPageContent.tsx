@@ -16,6 +16,7 @@ interface ADRPageContentProps {
 export const ADRPageContent: React.FC<ADRPageContentProps> = ({ directory, adr }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const { t } = useI18n();
   const {
     width: sidebarWidth,
     isResizing,
@@ -25,7 +26,6 @@ export const ADRPageContent: React.FC<ADRPageContentProps> = ({ directory, adr }
     maxWidth: 640, // 40rem
     defaultWidth: 384, // 24rem
   });
-  const { t } = useI18n();
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -37,6 +37,11 @@ export const ADRPageContent: React.FC<ADRPageContentProps> = ({ directory, adr }
 
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
+
+  // Don't render until we have the sidebar width to prevent layout shift
+  if (sidebarWidth === null) {
+    return null;
+  }
 
   if (!adr) {
     return (

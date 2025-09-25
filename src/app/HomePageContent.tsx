@@ -35,6 +35,11 @@ export const HomePageContent: React.FC<HomePageContentProps> = ({ directory }) =
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
+  // Don't render until we have the sidebar width to prevent layout shift
+  if (sidebarWidth === null) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Navigation directory={directory} />

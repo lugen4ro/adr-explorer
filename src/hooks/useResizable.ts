@@ -9,19 +9,21 @@ interface UseResizableOptions {
 }
 
 export const useResizable = ({ minWidth, maxWidth, defaultWidth }: UseResizableOptions) => {
-  const [width, setWidth] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("sidebar-width");
-      if (saved) {
-        const savedWidth = parseInt(saved, 10);
-        if (savedWidth >= minWidth && savedWidth <= maxWidth) {
-          return savedWidth;
-        }
+  const [width, setWidth] = useState<number | null>(null);
+  const [isResizing, setIsResizing] = useState(false);
+
+  // Load from localStorage immediately after hydration
+  useEffect(() => {
+    const saved = localStorage.getItem("sidebar-width");
+    if (saved) {
+      const savedWidth = parseInt(saved, 10);
+      if (savedWidth >= minWidth && savedWidth <= maxWidth) {
+        setWidth(savedWidth);
+        return;
       }
     }
-    return defaultWidth;
-  });
-  const [isResizing, setIsResizing] = useState(false);
+    setWidth(defaultWidth);
+  }, [minWidth, maxWidth, defaultWidth]);
 
   const startResizing = useCallback(() => {
     setIsResizing(true);
@@ -33,17 +35,15 @@ export const useResizable = ({ minWidth, maxWidth, defaultWidth }: UseResizableO
 
   const resize = useCallback(
     (mouseMoveEvent: MouseEvent) => {
-      if (isResizing) {
+      if (isResizing && width !== null) {
         const newWidth = mouseMoveEvent.clientX;
         if (newWidth >= minWidth && newWidth <= maxWidth) {
           setWidth(newWidth);
-          if (typeof window !== "undefined") {
-            localStorage.setItem("sidebar-width", newWidth.toString());
-          }
+          localStorage.setItem("sidebar-width", newWidth.toString());
         }
       }
     },
-    [isResizing, minWidth, maxWidth],
+    [isResizing, minWidth, maxWidth, width],
   );
 
   useEffect(() => {
