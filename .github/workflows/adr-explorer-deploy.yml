@@ -1,0 +1,19 @@
+name: Deploy ADR Explorer
+
+on:
+  push:
+    paths: ["doc/adr/**"] # NOTE: Change this if you place your adrs elsewhere
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: lugen4ro/adr-explorer@main
+        with:
+          adr-path: "doc/adr" # NOTE: Change this if you place your adrs elsewhere
+      - uses: actions/deploy-pages@v4
