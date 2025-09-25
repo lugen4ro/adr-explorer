@@ -65,10 +65,7 @@ export function flattenADRs(directory: ADRDirectory): ADR[] {
  *
  * @internal This function is used internally by getAllADRs()
  */
-async function scanDirectory(
-  dirPath: string,
-  name: string,
-): Promise<ADRDirectory> {
+async function scanDirectory(dirPath: string, name: string): Promise<ADRDirectory> {
   const directory: ADRDirectory = {
     name,
     path: dirPath,
@@ -91,10 +88,7 @@ async function scanDirectory(
       const stat = await fs.stat(fullPath);
       if (stat.isDirectory()) {
         const subdirectory = await scanDirectory(fullPath, file);
-        if (
-          subdirectory.adrs.length > 0 ||
-          subdirectory.subdirectories.length > 0
-        ) {
+        if (subdirectory.adrs.length > 0 || subdirectory.subdirectories.length > 0) {
           directory.subdirectories.push(subdirectory);
         }
       }

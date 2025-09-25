@@ -27,8 +27,8 @@ export async function generateMetadata({ params }: ADRPageProps): Promise<Metada
 }
 
 export default async function ADRPage({ params }: ADRPageProps) {
-  const { directory, allADRs } = await getAllADRs();
+  const { allADRs } = await getAllADRs();
   const adr = allADRs.find((adr) => adr.id === params.id);
 
-  return <ADRPageContent directory={directory} adr={adr || null} />;
+  return <ADRPageContent adr={adr || null} />;
 }
