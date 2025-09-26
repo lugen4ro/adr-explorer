@@ -178,22 +178,30 @@ function parseADRMetadata(content: string): {
   let status = "Unknown";
   let date: string | undefined;
 
-  for (const line of lines) {
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
     if (line.startsWith("# ")) {
       title = line.substring(2).trim();
     } else if (line.toLowerCase().includes("status")) {
-      const nextLineIndex = lines.indexOf(line) + 1;
-      if (nextLineIndex < lines.length) {
-        status = lines[nextLineIndex].trim();
+      // Look for the next non-empty line after "status"
+      for (let j = i + 1; j < lines.length; j++) {
+        const nextLine = lines[j].trim();
+        if (nextLine.length > 0) {
+          status = nextLine;
+          break;
+        }
       }
     } else if (line.toLowerCase().includes("date")) {
-      const nextLineIndex = lines.indexOf(line) + 1;
-      if (nextLineIndex < lines.length) {
-        date = lines[nextLineIndex].trim();
+      // Look for the next non-empty line after "date"
+      for (let j = i + 1; j < lines.length; j++) {
+        const nextLine = lines[j].trim();
+        if (nextLine.length > 0) {
+          date = nextLine;
+          break;
+        }
       }
     }
   }
-
   return { title, status, date };
 }
 

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import { useI18n } from "@/hooks/useI18n";
 import type { ADRDirectory } from "@/types/adr";
+import { StatusBadge } from "./molecules";
 
 interface NavigationProps {
   directory: ADRDirectory;
@@ -116,7 +117,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
               }`}
             >
               <div className="font-medium">{adr.title}</div>
-              <div className="text-xs opacity-75">{adr.status}</div>
+              <div className="mt-1">
+                <StatusBadge status={adr.status} />
+              </div>
             </Link>
           </li>
         ))}
@@ -145,7 +148,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           width: width,
         }}
         className={`
-        fixed top-16 left-0 h-[calc(100vh-4rem)] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 
+        fixed top-16 left-0 h-[calc(100vh-4rem)] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700
         transform transition-transform duration-300 ease-in-out z-40
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0
