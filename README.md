@@ -79,6 +79,15 @@ Your site will be live at `https://username.github.io/repository-name/`
 - Superseded
 - Rejected
 
+## Roadmap
+
+- [x] Explore ADRs in modern UI
+- [x] Support ADR format of [adr-tools](https://github.com/npryce/adr-tools)
+- [ ] Search ADRs with title
+- [ ] Support ADRs with different format
+- [ ] Support nested ADR directory structures
+- [ ] Support non-English ADRs
+
 ## License
 
 MIT
