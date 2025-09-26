@@ -1,6 +1,8 @@
 # ADR Explorer
 
-A GitHub Action that deploys your Architecture Decision Records as a beautiful, searchable website.
+A GitHub Action that deploys your Architecture Decision Records as a beautiful website using GitHub Pages.
+
+<img width="6624" height="3774" alt="CleanShot2025-09-26at10 42 45@2x" src="https://github.com/user-attachments/assets/c7a9d97d-53ae-48bf-94b3-bacf736a7e50" />
 
 ## Features
 
