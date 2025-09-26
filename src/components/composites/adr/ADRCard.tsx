@@ -15,14 +15,14 @@ export function ADRCard({ adr }: ADRCardProps) {
       style={{ cursor: "pointer" }}
       {...({ href: `/adr/${adr.id}` } as any)}
     >
-      <Group justify="apart" mb="xs">
-        <Title order={4} lineClamp={2}>
+      <Group gap="sm" mb="xs" align="flex-start">
+        <StatusBadge status={adr.status} compact />
+        <Title order={4} lineClamp={2} style={{ flex: 1 }}>
           {adr.title}
         </Title>
-        <StatusBadge status={adr.status} />
       </Group>
 
-      {adr.category && (
+      {adr.category && adr.category.toLowerCase() !== "adr" && (
         <Text size="sm" c="dimmed" mb="xs">
           {adr.category}
         </Text>

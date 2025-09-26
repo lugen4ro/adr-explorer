@@ -88,10 +88,13 @@ export class ADRService {
     for (const line of lines) {
       if (line.startsWith("# ")) {
         title = line.substring(2).trim();
-      } else if (line.toLowerCase().includes("status")) {
+      } else if (line.toLowerCase().startsWith("## status")) {
         const nextLineIndex = lines.indexOf(line) + 1;
         if (nextLineIndex < lines.length) {
-          status = lines[nextLineIndex].trim();
+          const statusLine = lines[nextLineIndex].trim();
+          if (statusLine && !statusLine.startsWith("#")) {
+            status = statusLine;
+          }
         }
       } else if (line.toLowerCase().includes("date")) {
         const nextLineIndex = lines.indexOf(line) + 1;

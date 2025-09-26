@@ -24,17 +24,30 @@ export function AppSidebar({ directory }: AppSidebarProps) {
         </Title>
       )}
 
-      {dir.adrs.map((adr) => (
-        <NavLink
-          key={adr.id}
-          component={Link}
-          href={`/adr/${adr.id}`}
-          label={adr.title}
-          description={<StatusBadge status={adr.status} />}
-          active={pathname === `/adr/${adr.id}`}
-          ml={level * 16}
-        />
-      ))}
+      {dir.adrs.map((adr) => {
+        const expectedPath = `/adr/${adr.id}`;
+        const isActive =
+          pathname === expectedPath || pathname === `${expectedPath}/`;
+
+        return (
+          <NavLink
+            key={adr.id}
+            component={Link}
+            href={`/adr/${adr.id}`}
+            label={adr.title}
+            leftSection={<StatusBadge status={adr.status} compact />}
+            active={isActive}
+            ml={level * 16}
+            variant={isActive ? "light" : "subtle"}
+            styles={{
+              section: {
+                alignSelf: "flex-start",
+                marginTop: "5px",
+              },
+            }}
+          />
+        );
+      })}
 
       {dir.subdirectories.map((subdir) => renderDirectory(subdir, level + 1))}
     </React.Fragment>
