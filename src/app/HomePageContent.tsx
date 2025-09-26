@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { HomePage } from "@/components/HomePage";
+import { ADRHomePage } from "@/components";
 import type { ADRDirectory } from "@/types/adr";
 
 interface HomePageContentProps {
@@ -11,5 +11,5 @@ interface HomePageContentProps {
 export const HomePageContent: React.FC<HomePageContentProps> = ({
   directory,
 }) => {
-  return <HomePage directory={directory} />;
+  return <ADRHomePage directory={directory} />;
 };

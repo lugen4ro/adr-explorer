@@ -3,9 +3,9 @@ import { getAllADRs } from "@/lib/staticGeneration";
 import { ADRPageContent } from "./ADRPageContent";
 
 interface ADRPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function generateStaticParams() {
@@ -20,7 +20,8 @@ export async function generateMetadata({
   params,
 }: ADRPageProps): Promise<Metadata> {
   const { allADRs } = await getAllADRs();
-  const adr = allADRs.find((adr) => adr.id === params.id);
+  const { id } = await params;
+  const adr = allADRs.find((adr) => adr.id === id);
 
   return {
     title: adr ? `${adr.title} - ADR Explorer` : "ADR Not Found - ADR Explorer",
@@ -32,7 +33,8 @@ export async function generateMetadata({
 
 export default async function ADRPage({ params }: ADRPageProps) {
   const { allADRs } = await getAllADRs();
-  const adr = allADRs.find((adr) => adr.id === params.id);
+  const { id } = await params;
+  const adr = allADRs.find((adr) => adr.id === id);
 
   return <ADRPageContent adr={adr || null} />;
 }

@@ -1,27 +1,16 @@
 # ADR Explorer Next
 
-ADR Explorer Next is a Next.js-based web application for visualizing and navigating Architectural Decision Records (ADRs) with static site generation.
+ADR Explorer Next is a Next.js-based web application for visualizing and navigating Architectural Decision Records (ADRs) with static site generation and Mantine UI components.
 
-## Project Overview
-
-This project is a Next.js port of the original ADR Explorer (Vite/React) that leverages static site generation for better performance and SEO. The app reads ADR markdown files from a `docs/adr/` directory structure and generates static pages for each ADR at build time.
-
-## Architecture
+## Architecture & Technology Stack
 
 - **Next.js 15** with App Router and static export
 - **React 19** with TypeScript
-- **Tailwind CSS v4** for styling with dark mode support
-- **Biome** for linting and formatting (instead of ESLint)
+- **Mantine v8** for UI components and design system
+- **Biome** for linting and formatting (per ADR-003)
+- **pnpm** for package management (per ADR-002)
 - **Static Site Generation** for all ADR pages
-
-## Key Features
-
-- **Static Generation**: All ADR pages are pre-generated at build time
-- **Hierarchical Navigation**: Support for nested ADR categories
-- **Markdown Rendering**: Full GitHub-flavored markdown with Mermaid diagrams
-- **Internationalization**: Multi-language support (EN/JA)
-- **Dark Mode**: Complete dark/light theme support
-- **Responsive Design**: Mobile-first responsive layout
+- **Three-Layer Component Architecture** (per ADR-004)
 
 ## Common Commands
 
@@ -30,62 +19,104 @@ This project is a Next.js port of the original ADR Explorer (Vite/React) that le
 - `pnpm dev` - Start development server with Turbopack
 - `pnpm build` - Build static site for production
 - `pnpm start` - Serve production build
-- `pnpm check` - Run Biome linting and formatting with automated fixing
+- `pnpm check` - Run Biome linting and formatting with automated fixing (per ADR-003)
 - `pnpm typecheck` - Run typescript compiler for type checking
+
+## Three-Layer Component Architecture (ADR-004)
+
+This project follows a strict three-layer component architecture to maintain clear separation of concerns:
+
+### 1. **Atoms** (`src/components/atoms/`)
+- **Purpose**: Basic, single-purpose UI elements
+- **Examples**: Button, TextInput, Select, Badge, Card, ActionButton
+- **Rules**: 
+  - MUST be general-purpose and reusable
+  - NO business logic or context-specific behavior
+  - Wrap Mantine components with consistent defaults
+
+### 2. **Molecules** (`src/components/molecules/`)
+- **Purpose**: Reusable combinations of atoms that remain context-agnostic
+- **Examples**: SearchBox, LanguageSelector, StatusBadge, StatCard
+- **Rules**:
+  - Can ONLY compose atoms (no molecule-to-molecule dependencies)
+  - MUST remain general-purpose
+  - NO business logic or domain-specific behavior
+
+### 3. **Composites** (`src/components/composites/`)
+- **Purpose**: Context-aware components built for specific business use cases
+- **Structure**: Organized by business domain (`adr/`, `shared/`)
+- **Examples**: ADRCard, ADRHomePage, AppHeader, AppLayout, AppSidebar
+- **Rules**:
+  - Encode business logic and understand domain context
+  - Can use atoms, molecules, and other composites
+  - Contains all context-specific behavior
+
+### Component Guidelines
+
+**✅ DO:**
+- Keep atoms and molecules general-purpose
+- Put all business logic in composites
+- Follow the dependency rules (molecules → atoms only)
+- Use descriptive names that indicate purpose
+- Maintain consistent prop interfaces
+
+**❌ DON'T:**
+- Create context-specific atoms or molecules
+- Add business logic to atoms or molecules
+- Create molecule-to-molecule dependencies
+- Mix concerns across layers
 
 ## File Structure
 
 ```
 src/
-├── app/
-│   ├── layout.tsx          # Root layout
-│   ├── page.tsx            # Home page (server component)
-│   ├── HomePageContent.tsx # Home page client component
-│   └── adr/[id]/
-│       ├── page.tsx        # ADR detail page (server component)
-│       └── ADRPageContent.tsx # ADR detail client component
 ├── components/
-│   ├── ADRRenderer.tsx     # Markdown renderer with Mermaid support
-│   ├── HomePage.tsx        # Home page content
-│   └── Navigation.tsx      # Navigation and sidebar components
-├── hooks/
-│   └── useI18n.ts          # Internationalization hook
-├── lib/
-│   └── staticGeneration.ts # Static generation utilities
-├── services/
-│   └── adrService.ts       # ADR loading service
-└── types/
-    └── adr.ts              # TypeScript interfaces
+│   ├── atoms/              # General-purpose basic elements
+│   │   ├── Button.tsx
+│   │   ├── TextInput.tsx
+│   │   ├── ActionButton.tsx
+│   │   └── index.ts
+│   ├── molecules/          # General-purpose combinations
+│   │   ├── SearchBox.tsx
+│   │   ├── StatusBadge.tsx
+│   │   └── index.ts
+│   ├── composites/         # Business-specific components
+│   │   ├── adr/           # ADR-specific composites
+│   │   │   ├── ADRCard.tsx
+│   │   │   └── ADRHomePage.tsx
+│   │   └── shared/        # Cross-domain composites
+│   │       ├── AppHeader.tsx
+│   │       └── AppLayout.tsx
+│   └── index.ts           # Main component exports
+├── app/                   # Next.js App Router
+├── hooks/                 # React hooks
+├── lib/                   # Utilities
+├── services/             # Data services
+└── types/                # TypeScript definitions
 ```
-
-## Static Site Generation
-
-The app uses Next.js static generation features:
-
-1. **generateStaticParams()** in `/adr/[id]/page.tsx` pre-generates all ADR pages
-2. **generateMetadata()** creates SEO-friendly metadata for each ADR
-3. **getAllADRs()** utility scans the file system at build time
-4. **Static Export** configuration in `next.config.ts` generates a fully static site
 
 ## ADR File Structure
 
-ADR files should be placed in `content/adr/` directory. The system automatically scans for all `.md` files:
+ADR files are located in `doc/adr/` directory:
 
 ```
-content/adr/
-├── 001-database-choice.md
-├── 002-authentication-strategy.md
-├── testadr.md
-└── backend/                # Optional subdirectories
-    └── 003-api-framework.md
+doc/adr/
+├── 0001-record-architecture-decisions.md
+├── 0002-use-pnpm-instead-of-npm.md
+├── 0003-use-biome-for-linting-and-formatting.md
+└── 0004-three-layer-component-architecture.md
 ```
-
-No `index.json` files are needed - the system automatically discovers all `.md` files in the directory tree.
 
 ## Development Notes
 
-- Use **pnpm** for package management
-- Follow **Biome** formatting and linting rules
-- All client interactivity is separated into `*Content.tsx` components
-- Server components handle static data loading
-- Dark mode classes are included throughout for theme support
+- Use **pnpm** for package management (per ADR-002)
+- Follow **Biome** formatting and linting rules (per ADR-003)
+- Adhere to **three-layer component architecture** (per ADR-004)
+- All client interactivity uses proper component layer separation
+- Dark/light mode support via Mantine's color scheme system
+
+## Development Workflow
+
+- **Testing changes**: User runs dev server locally, so no need to build after changes
+- **Code validation**: Run `pnpm check` and `pnpm typecheck` to validate changes
+- **Build only when**: Explicitly requested or for production deployment

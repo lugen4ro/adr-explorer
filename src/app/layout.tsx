@@ -11,9 +11,9 @@ import {
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
-import { Navigation } from "@/components/Navigation";
-import { Sidebar } from "@/components/Sidebar";
+import { AppLayout } from "@/components";
 import { getAllADRs } from "@/lib/staticGeneration";
+import { theme } from "@/lib/theme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,19 +40,14 @@ export default async function RootLayout({
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
-        <ColorSchemeScript />
+        <ColorSchemeScript defaultColorScheme="auto" />
       </head>
 
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <MantineProvider>
-          <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-            <Navigation directory={directory} />
-            <div>
-              <Sidebar directory={directory}>{children}</Sidebar>
-            </div>
-          </div>
+        <MantineProvider theme={theme}>
+          <AppLayout directory={directory}>{children}</AppLayout>
         </MantineProvider>
       </body>
     </html>
