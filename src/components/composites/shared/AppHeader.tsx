@@ -33,15 +33,11 @@ export function AppHeader({
 
   return (
     <Group justify="apart" p="md">
-      <Title
-        order={1}
-        size="h3"
-        component={Link}
-        style={{ textDecoration: "none", color: "inherit" }}
-        {...({ href: "/" } as any)}
-      >
-        ADR Explorer
-      </Title>
+      <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
+        <Title order={1} size="h3">
+          ADR Explorer
+        </Title>
+      </Link>
 
       <Group style={{ flex: 1, maxWidth: 400 }}>
         <SearchBox

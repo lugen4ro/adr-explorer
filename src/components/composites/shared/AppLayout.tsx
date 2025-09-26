@@ -54,6 +54,12 @@ export function AppLayout({ directory, children }: AppLayoutProps) {
 
       {/* Resize handle */}
       <div
+        role="slider"
+        aria-label="Resize sidebar"
+        aria-valuenow={width || defaultWidth}
+        aria-valuemin={minWidth}
+        aria-valuemax={maxWidth}
+        tabIndex={0}
         style={{
           position: "fixed",
           left: width || defaultWidth,

@@ -2,7 +2,6 @@ import { type CardProps, Card as MantineCard } from "@mantine/core";
 
 export interface AppCardProps extends CardProps {
   children: React.ReactNode;
-  component?: any;
 }
 
 export function Card({
@@ -11,7 +10,6 @@ export function Card({
   padding = "lg",
   radius = "md",
   withBorder = true,
-  component,
   ...props
 }: AppCardProps) {
   return (
@@ -20,7 +18,6 @@ export function Card({
       padding={padding}
       radius={radius}
       withBorder={withBorder}
-      component={component}
       {...props}
     >
       {children}

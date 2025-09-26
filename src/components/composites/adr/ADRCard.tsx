@@ -10,29 +10,30 @@ export interface ADRCardProps {
 
 export function ADRCard({ adr }: ADRCardProps) {
   return (
-    <Card
-      component={Link}
-      style={{ cursor: "pointer" }}
-      {...({ href: `/adr/${adr.id}` } as any)}
+    <Link
+      href={`/adr/${adr.id}`}
+      style={{ textDecoration: "none", color: "inherit" }}
     >
-      <Group gap="sm" mb="xs" align="flex-start">
-        <StatusBadge status={adr.status} compact />
-        <Title order={4} lineClamp={2} style={{ flex: 1 }}>
-          {adr.title}
-        </Title>
-      </Group>
+      <Card style={{ cursor: "pointer" }}>
+        <Group gap="sm" mb="xs" align="flex-start">
+          <StatusBadge status={adr.status} compact />
+          <Title order={4} lineClamp={2} style={{ flex: 1 }}>
+            {adr.title}
+          </Title>
+        </Group>
 
-      {adr.category && adr.category.toLowerCase() !== "adr" && (
-        <Text size="sm" c="dimmed" mb="xs">
-          {adr.category}
-        </Text>
-      )}
+        {adr.category && adr.category.toLowerCase() !== "adr" && (
+          <Text size="sm" c="dimmed" mb="xs">
+            {adr.category}
+          </Text>
+        )}
 
-      {adr.date && (
-        <Text size="xs" c="dimmed">
-          {adr.date}
-        </Text>
-      )}
-    </Card>
+        {adr.date && (
+          <Text size="xs" c="dimmed">
+            {adr.date}
+          </Text>
+        )}
+      </Card>
+    </Link>
   );
 }
