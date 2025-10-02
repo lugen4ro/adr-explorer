@@ -6,9 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ActionButton } from "../../atoms";
 
-export interface AppHeaderProps {}
-
-export function AppHeader({}: AppHeaderProps) {
+export function AppHeader() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const [mounted, setMounted] = useState(false);
 

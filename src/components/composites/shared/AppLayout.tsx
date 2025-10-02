@@ -46,7 +46,7 @@ export function AppLayout({ directory, children }: AppLayoutProps) {
             size="sm"
             mr="xl"
           />
-          <AppNavigation directory={directory} />
+          <AppNavigation />
         </div>
       </AppShell.Header>
 

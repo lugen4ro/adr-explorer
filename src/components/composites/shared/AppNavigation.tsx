@@ -1,15 +1,9 @@
 "use client";
 
 import { AppShell } from "@mantine/core";
-import type { ADRDirectory } from "@/types/adr";
 import { AppHeader } from "./AppHeader";
 
-interface AppNavigationProps {
-  directory: ADRDirectory;
-  onSearch?: (query: string) => void;
-}
-
-export function AppNavigation({}: AppNavigationProps) {
+export function AppNavigation() {
   return (
     <AppShell.Header>
       <AppHeader />

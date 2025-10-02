@@ -12,8 +12,8 @@ import {
   mantineHtmlProps,
 } from "@mantine/core";
 import { AppLayout } from "@/components";
-import { FileService } from "@/services/fileService";
 import { theme } from "@/lib/theme";
+import { FileService } from "@/services/fileService";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
