@@ -12,7 +12,7 @@ import {
   mantineHtmlProps,
 } from "@mantine/core";
 import { AppLayout } from "@/components";
-import { getAllADRs } from "@/lib/staticGeneration";
+import { FileService } from "@/services/fileService";
 import { theme } from "@/lib/theme";
 
 const geistSans = Geist({
@@ -35,7 +35,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { directory } = await getAllADRs();
+  const fileService = new FileService("adr");
+  const { directory } = await fileService.getAllADRs();
 
   return (
     <html lang="en" {...mantineHtmlProps}>

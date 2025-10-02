@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getAllADRs } from "@/lib/staticGeneration";
+import { FileService } from "@/services/fileService";
 import { ADRPageContent } from "./ADRPageContent";
 
 interface ADRPageProps {
@@ -9,7 +9,8 @@ interface ADRPageProps {
 }
 
 export async function generateStaticParams() {
-  const { allADRs } = await getAllADRs();
+  const fileService = new FileService("adr");
+  const { allADRs } = await fileService.getAllADRs();
 
   return allADRs.map((adr) => ({
     id: adr.id,
@@ -19,7 +20,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: ADRPageProps): Promise<Metadata> {
-  const { allADRs } = await getAllADRs();
+  const fileService = new FileService("adr");
+  const { allADRs } = await fileService.getAllADRs();
   const { id } = await params;
   const adr = allADRs.find((adr) => adr.id === id);
 
@@ -32,7 +34,8 @@ export async function generateMetadata({
 }
 
 export default async function ADRPage({ params }: ADRPageProps) {
-  const { allADRs } = await getAllADRs();
+  const fileService = new FileService("adr");
+  const { allADRs } = await fileService.getAllADRs();
   const { id } = await params;
   const adr = allADRs.find((adr) => adr.id === id);
 

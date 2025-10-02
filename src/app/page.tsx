@@ -1,8 +1,9 @@
-import { getAllADRs } from "@/lib/staticGeneration";
+import { FileService } from "@/services/fileService";
 import { HomePageContent } from "./HomePageContent";
 
 export default async function Home() {
-  const { directory } = await getAllADRs();
+  const fileService = new FileService("adr");
+  const { directory } = await fileService.getAllADRs();
 
   return <HomePageContent directory={directory} />;
 }
