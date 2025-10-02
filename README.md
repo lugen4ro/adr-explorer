@@ -60,6 +60,7 @@ We will use PostgreSQL...
 ```
 
 Your site will be live at `https://username.github.io/repository-name/`
+For example for this repository it is [https://lugen4ro.github.io/adr-explorer/](https://lugen4ro.github.io/adr-explorer/)
 
 ## Configuration
 
