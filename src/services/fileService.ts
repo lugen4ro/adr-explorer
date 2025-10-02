@@ -33,20 +33,6 @@ export class FileService implements IFileService {
   }
 
   /**
-   * Discovers all ADR files in the configured base path and returns a hierarchical directory structure.
-   *
-   * Scans the `content/{basePath}` directory recursively for markdown files,
-   * parsing each one as an ADR and organizing them into a tree structure.
-   *
-   * @returns Promise that resolves to the root ADRDirectory containing all discovered ADRs
-   * @throws Error if the base path cannot be accessed or parsed
-   */
-  async discoverADRs(): Promise<ADRDirectory> {
-    const docsPath = path.join(process.cwd(), "content", this.basePath);
-    return await this.scanDirectory(docsPath, "root");
-  }
-
-  /**
    * Gets all ADRs in both hierarchical and flattened formats.
    *
    * @returns Promise that resolves to an object containing both the directory structure and flattened array
@@ -61,12 +47,26 @@ export class FileService implements IFileService {
   }
 
   /**
+   * Discovers all ADR files in the configured base path and returns a hierarchical directory structure.
+   *
+   * Scans the `content/{basePath}` directory recursively for markdown files,
+   * parsing each one as an ADR and organizing them into a tree structure.
+   *
+   * @returns Promise that resolves to the root ADRDirectory containing all discovered ADRs
+   * @throws Error if the base path cannot be accessed or parsed
+   */
+  private async discoverADRs(): Promise<ADRDirectory> {
+    const docsPath = path.join(process.cwd(), "content", this.basePath);
+    return await this.scanDirectory(docsPath, "root");
+  }
+
+  /**
    * Recursively flattens a hierarchical ADR directory structure into a single array.
    *
    * @param directory - The ADR directory structure to flatten
    * @returns A flat array containing all ADR objects from the directory and its subdirectories
    */
-  flattenADRs(directory: ADRDirectory): ADR[] {
+  private flattenADRs(directory: ADRDirectory): ADR[] {
     const adrs: ADR[] = [...directory.adrs];
 
     for (const subdir of directory.subdirectories) {

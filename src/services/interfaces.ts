@@ -20,13 +20,6 @@ export interface IParseService {
  */
 export interface IFileService {
   /**
-   * Discovers all ADR files in the configured base path and returns a hierarchical directory structure.
-   *
-   * @returns Promise that resolves to the root ADRDirectory containing all discovered ADRs
-   */
-  discoverADRs(): Promise<ADRDirectory>;
-
-  /**
    * Gets all ADRs in both hierarchical and flattened formats.
    *
    * @returns Promise that resolves to an object containing both the directory structure and flattened array
@@ -35,12 +28,4 @@ export interface IFileService {
     directory: ADRDirectory;
     allADRs: ADR[];
   }>;
-
-  /**
-   * Recursively flattens a hierarchical ADR directory structure into a single array.
-   *
-   * @param directory - The ADR directory structure to flatten
-   * @returns A flat array containing all ADR objects from the directory and its subdirectories
-   */
-  flattenADRs(directory: ADRDirectory): ADR[];
 }
