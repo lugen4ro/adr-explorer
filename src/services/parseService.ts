@@ -1,4 +1,5 @@
 import type { ADR } from "@/types/adr";
+import { ADRStatus } from "@/types/adr";
 import type { IParseService } from "./interfaces";
 
 /**
@@ -47,13 +48,13 @@ export class ParseService implements IParseService {
    */
   private parseMetadata(content: string): {
     title: string;
-    status: string;
+    status: ADRStatus;
     date?: string;
   } {
     const lines = content.split("\n");
 
     let title = "Untitled ADR";
-    let status = "Unknown";
+    let status = ADRStatus.UNKNOWN;
     let date: string | undefined;
 
     for (let i = 0; i < lines.length; i++) {
@@ -65,7 +66,7 @@ export class ParseService implements IParseService {
         for (let j = i + 1; j < lines.length; j++) {
           const nextLine = lines[j].trim();
           if (nextLine.length > 0) {
-            status = nextLine;
+            status = this.parseStatusFromString(nextLine);
             break;
           }
         }
@@ -82,6 +83,29 @@ export class ParseService implements IParseService {
     }
 
     return { title, status, date };
+  }
+
+  /**
+   * Converts a string status to ADRStatus enum.
+   * Falls back to PROPOSED if no match is found.
+   */
+  private parseStatusFromString(statusString: string): ADRStatus {
+    const normalized = statusString.toLowerCase().trim();
+    
+    switch (normalized) {
+      case 'accepted':
+        return ADRStatus.ACCEPTED;
+      case 'deprecated':
+        return ADRStatus.DEPRECATED;
+      case 'superseded':
+        return ADRStatus.SUPERSEDED;
+      case 'rejected':
+        return ADRStatus.REJECTED;
+      case 'proposed':
+        return ADRStatus.PROPOSED;
+      default:
+        return ADRStatus.UNKNOWN;
+    }
   }
 
   /**

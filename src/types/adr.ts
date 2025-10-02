@@ -7,6 +7,7 @@ export enum ADRStatus {
   DEPRECATED = "Deprecated",
   SUPERSEDED = "Superseded",
   REJECTED = "Rejected",
+  UNKNOWN = "Unknown",
 }
 
 /**

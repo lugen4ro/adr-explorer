@@ -13,7 +13,7 @@ export async function generateStaticParams() {
   const { allADRs } = await fileService.getAllADRs();
 
   return allADRs.map((adr) => ({
-    id: adr.id,
+    id: encodeURIComponent(adr.id),
   }));
 }
 
@@ -23,7 +23,8 @@ export async function generateMetadata({
   const fileService = new FileService("adr");
   const { allADRs } = await fileService.getAllADRs();
   const { id } = await params;
-  const adr = allADRs.find((adr) => adr.id === id);
+  const decodedId = decodeURIComponent(id);
+  const adr = allADRs.find((adr) => adr.id === decodedId);
 
   return {
     title: adr ? `${adr.title} - ADR Explorer` : "ADR Not Found - ADR Explorer",
@@ -37,7 +38,8 @@ export default async function ADRPage({ params }: ADRPageProps) {
   const fileService = new FileService("adr");
   const { allADRs } = await fileService.getAllADRs();
   const { id } = await params;
-  const adr = allADRs.find((adr) => adr.id === id);
+  const decodedId = decodeURIComponent(id);
+  const adr = allADRs.find((adr) => adr.id === decodedId);
 
   return <ADRPageContent adr={adr || null} />;
 }
