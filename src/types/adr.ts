@@ -30,6 +30,18 @@ export interface ADR {
 }
 
 /**
+ * Configuration for filtering files during ADR discovery.
+ */
+export interface ADRFileFilter {
+  /** File extensions to include (e.g., ['.md', '.markdown']) */
+  allowedExtensions: string[];
+  /** Specific filenames to exclude (e.g., ['README.md', 'TEMPLATE.md']) */
+  excludedFilenames: string[];
+  /** Patterns to exclude (e.g., ['*.template.md', 'draft-*']) */
+  excludedPatterns?: string[];
+}
+
+/**
  * Represents a directory structure containing ADRs and subdirectories.
  * Used for organizing and navigating hierarchical ADR collections.
  */

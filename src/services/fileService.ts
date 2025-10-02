@@ -1,6 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import type { ADR, ADRDirectory } from "@/types/adr";
+import type { ADR, ADRDirectory, ADRFileFilter } from "@/types/adr";
 import type { IFileService, IParseService } from "./interfaces";
 import { ParseService } from "./parseService";
 
@@ -20,16 +20,23 @@ import { ParseService } from "./parseService";
 export class FileService implements IFileService {
   private basePath: string;
   private parseService: IParseService;
+  private fileFilter: ADRFileFilter;
 
   /**
    * Creates a new FileService instance.
    *
    * @param basePath - The base directory name within the content folder to scan for ADRs.
    *                   Defaults to "adr". The full path will be `content/{basePath}`.
+   * @param fileFilter - Optional file filtering configuration. If not provided, uses default filters.
    */
-  constructor(basePath = "adr") {
+  constructor(basePath = "adr", fileFilter?: ADRFileFilter) {
     this.basePath = basePath;
     this.parseService = new ParseService();
+    this.fileFilter = fileFilter || {
+      allowedExtensions: [".md", ".markdown"],
+      excludedFilenames: ["README.md", "readme.md", "_adr_template.md"],
+      excludedPatterns: [],
+    };
   }
 
   /**
@@ -96,12 +103,12 @@ export class FileService implements IFileService {
     };
 
     try {
-      // Scan directory for .md files
+      // Scan directory for files
       const files = await fs.readdir(dirPath);
-      const mdFiles = files.filter((file) => file.endsWith(".md"));
+      const validFiles = files.filter((file) => this.shouldIncludeFile(file));
 
       directory.adrs = await Promise.all(
-        mdFiles.map((file) => this.loadADR(path.join(dirPath, file), file)),
+        validFiles.map((file) => this.loadADR(path.join(dirPath, file), file)),
       );
 
       // Check for subdirectories
@@ -123,6 +130,40 @@ export class FileService implements IFileService {
     }
 
     return directory;
+  }
+
+  /**
+   * Determines if a file should be included based on the configured file filter.
+   *
+   * @param fileName - Name of the file to check
+   * @returns True if the file should be included, false otherwise
+   * @private
+   */
+  private shouldIncludeFile(fileName: string): boolean {
+    const fileExt = path.extname(fileName).toLowerCase();
+
+    // Check if extension is allowed
+    if (!this.fileFilter.allowedExtensions.includes(fileExt)) {
+      return false;
+    }
+
+    // Check if filename is explicitly excluded
+    if (this.fileFilter.excludedFilenames.includes(fileName)) {
+      return false;
+    }
+
+    // Check against excluded patterns if any
+    if (this.fileFilter.excludedPatterns) {
+      for (const pattern of this.fileFilter.excludedPatterns) {
+        // Simple wildcard matching for now
+        const regex = new RegExp(pattern.replace(/\*/g, ".*"));
+        if (regex.test(fileName)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   /**
