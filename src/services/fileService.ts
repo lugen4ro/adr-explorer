@@ -1,28 +1,29 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { ADR, ADRDirectory } from "@/types/adr";
+import type { IFileService, IParseService } from "./interfaces";
 import { ParseService } from "./parseService";
 
 /**
  * Filesystem service for discovering ADR markdown files and building directory structures.
- * 
+ *
  * Handles directory scanning and file reading operations, delegating content parsing
  * to the ParseService for clean separation of concerns.
- * 
+ *
  * @example
  * ```typescript
- * const fsService = new FileSystemService("adr");
+ * const fsService = new FileService("adr");
  * const directory = await fsService.discoverADRs();
  * console.log(directory.adrs); // Array of parsed ADR objects
  * ```
  */
-export class FileService {
+export class FileService implements IFileService {
   private basePath: string;
-  private parseService: ParseService;
+  private parseService: IParseService;
 
   /**
    * Creates a new FileService instance.
-   * 
+   *
    * @param basePath - The base directory name within the content folder to scan for ADRs.
    *                   Defaults to "adr". The full path will be `content/{basePath}`.
    */
@@ -33,10 +34,10 @@ export class FileService {
 
   /**
    * Discovers all ADR files in the configured base path and returns a hierarchical directory structure.
-   * 
+   *
    * Scans the `content/{basePath}` directory recursively for markdown files,
    * parsing each one as an ADR and organizing them into a tree structure.
-   * 
+   *
    * @returns Promise that resolves to the root ADRDirectory containing all discovered ADRs
    * @throws Error if the base path cannot be accessed or parsed
    */
@@ -47,7 +48,7 @@ export class FileService {
 
   /**
    * Gets all ADRs in both hierarchical and flattened formats.
-   * 
+   *
    * @returns Promise that resolves to an object containing both the directory structure and flattened array
    */
   async getAllADRs(): Promise<{
@@ -61,7 +62,7 @@ export class FileService {
 
   /**
    * Recursively flattens a hierarchical ADR directory structure into a single array.
-   * 
+   *
    * @param directory - The ADR directory structure to flatten
    * @returns A flat array containing all ADR objects from the directory and its subdirectories
    */
@@ -77,7 +78,7 @@ export class FileService {
 
   /**
    * Recursively scans a directory for ADR files and subdirectories.
-   * 
+   *
    * @param dirPath - Absolute path to the directory to scan
    * @param name - Display name for this directory level
    * @returns Promise that resolves to an ADRDirectory with parsed ADRs and subdirectories
@@ -126,7 +127,7 @@ export class FileService {
 
   /**
    * Loads and parses a single ADR markdown file.
-   * 
+   *
    * @param filePath - Absolute path to the ADR markdown file
    * @param fileName - Name of the file (used to generate ADR ID)
    * @returns Promise that resolves to a parsed ADR object
@@ -141,5 +142,4 @@ export class FileService {
       throw new Error(`Failed to load ADR: ${filePath}`);
     }
   }
-
 }

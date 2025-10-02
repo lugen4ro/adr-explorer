@@ -1,15 +1,16 @@
 import type { ADR } from "@/types/adr";
+import type { IParseService } from "./interfaces";
 
 /**
  * Service for parsing ADR markdown content and extracting metadata.
- * 
+ *
  * Handles the parsing of markdown files to extract structured ADR information
  * including title, status, date, and category from file content and paths.
  */
-export class ParseService {
+export class ParseService implements IParseService {
   /**
    * Parses a markdown file into an ADR object.
-   * 
+   *
    * @param content - Raw markdown content of the ADR file
    * @param fileName - Name of the file (used to generate ADR ID)
    * @param filePath - Full path to the file (used for category extraction)
@@ -31,13 +32,13 @@ export class ParseService {
 
   /**
    * Parses ADR metadata from markdown content using improved pattern matching.
-   * 
+   *
    * Extracts title (from H1 header), status (from lines containing "status"),
    * and date (from lines containing "date") from the markdown content.
-   * 
+   *
    * @param content - Raw markdown content of the ADR file
    * @returns Object containing extracted metadata with default fallbacks
-   * 
+   *
    * @remarks
    * - Title: Extracted from the first line starting with "# "
    * - Status: Extracted from the next non-empty line following any line containing "status" (case-insensitive)
@@ -85,10 +86,10 @@ export class ParseService {
 
   /**
    * Extracts the category from an ADR file path.
-   * 
+   *
    * Uses the parent directory name as the category.
    * For example, "/content/adr/backend/decision.md" would return "backend".
-   * 
+   *
    * @param filePath - Absolute path to the ADR file
    * @returns Category name or undefined if path is too shallow
    */
