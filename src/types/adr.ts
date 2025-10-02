@@ -14,9 +14,3 @@ export interface ADRDirectory {
   adrs: ADR[];
   subdirectories: ADRDirectory[];
 }
-
-export interface ADRConfig {
-  basePath: string;
-  i18n: Record<string, Record<string, string>>;
-  currentLanguage: string;
-}
