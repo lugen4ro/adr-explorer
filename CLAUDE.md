@@ -27,14 +27,16 @@ ADR Explorer Next is a Next.js-based web application for visualizing and navigat
 This project follows a strict three-layer component architecture to maintain clear separation of concerns:
 
 ### 1. **Atoms** (`src/components/atoms/`)
+
 - **Purpose**: Basic, single-purpose UI elements
 - **Examples**: Button, TextInput, Select, Badge, Card, ActionButton
-- **Rules**: 
+- **Rules**:
   - MUST be general-purpose and reusable
   - NO business logic or context-specific behavior
   - Wrap Mantine components with consistent defaults
 
 ### 2. **Molecules** (`src/components/molecules/`)
+
 - **Purpose**: Reusable combinations of atoms that remain context-agnostic
 - **Examples**: SearchBox, LanguageSelector, StatusBadge, StatCard
 - **Rules**:
@@ -43,6 +45,7 @@ This project follows a strict three-layer component architecture to maintain cle
   - NO business logic or domain-specific behavior
 
 ### 3. **Composites** (`src/components/composites/`)
+
 - **Purpose**: Context-aware components built for specific business use cases
 - **Structure**: Organized by business domain (`adr/`, `shared/`)
 - **Examples**: ADRCard, ADRHomePage, AppHeader, AppLayout, AppSidebar
@@ -54,6 +57,7 @@ This project follows a strict three-layer component architecture to maintain cle
 ### Component Guidelines
 
 **✅ DO:**
+
 - Keep atoms and molecules general-purpose
 - Put all business logic in composites
 - Follow the dependency rules (molecules → atoms only)
@@ -61,6 +65,7 @@ This project follows a strict three-layer component architecture to maintain cle
 - Maintain consistent prop interfaces
 
 **❌ DON'T:**
+
 - Create context-specific atoms or molecules
 - Add business logic to atoms or molecules
 - Create molecule-to-molecule dependencies
@@ -89,9 +94,9 @@ src/
 │   │       └── AppLayout.tsx
 │   └── index.ts           # Main component exports
 ├── app/                   # Next.js App Router
-├── hooks/                 # React hooks
+├── hooks/                 # React hooks - UI state management, React-specific patterns
 ├── lib/                   # Utilities
-├── services/             # Data services
+├── services/             # Data services - external data, APIs, business logic
 └── types/                # TypeScript definitions
 ```
 
@@ -114,6 +119,22 @@ doc/adr/
 - Adhere to **three-layer component architecture** (per ADR-004)
 - All client interactivity uses proper component layer separation
 - Dark/light mode support via Mantine's color scheme system
+
+## Services vs Hooks
+
+**Services** (`src/services/`):
+
+- **Data layer** - handles external data sources, APIs, file systems
+- **Pure functions** - independent of React lifecycle
+- **Business logic** - ADR parsing, file reading, data transformation
+- **Reusable across contexts** - can be used in components, SSG, or Node.js
+
+**Hooks** (`src/hooks/`):
+
+- **React-specific** - tied to component lifecycle and state
+- **UI state management** - local component state, effects, subscriptions
+- **React patterns** - useState, useEffect, custom hooks
+- **Component-bound** - only work within React components
 
 ## Development Workflow
 
