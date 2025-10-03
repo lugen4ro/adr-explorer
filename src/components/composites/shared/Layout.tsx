@@ -5,15 +5,15 @@ import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import type React from "react";
 import { useResizable } from "@/hooks/useResizable";
 import type { ADRDirectory } from "@/types/adr";
-import { AppNavigation } from "./AppNavigation";
-import { AppSidebar } from "./AppSidebar";
+import { Navigation } from "./Navigation";
+import { Sidebar } from "./Sidebar";
 
-interface AppLayoutProps {
+interface LayoutProps {
   directory: ADRDirectory;
   children: React.ReactNode;
 }
 
-export function AppLayout({ directory, children }: AppLayoutProps) {
+export function Layout({ directory, children }: LayoutProps) {
   const [opened, { toggle }] = useDisclosure();
   const { width: viewportWidth } = useViewportSize();
 
@@ -46,11 +46,11 @@ export function AppLayout({ directory, children }: AppLayoutProps) {
             size="sm"
             mr="xl"
           />
-          <AppNavigation />
+          <Navigation />
         </div>
       </AppShell.Header>
 
-      <AppSidebar directory={directory} />
+      <Sidebar directory={directory} />
 
       {/* Resize handle */}
       <div

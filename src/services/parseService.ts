@@ -95,7 +95,7 @@ export class ParseService implements IParseService {
         hasSeenH2 = true; // Mark that we've seen the first H2
         const heading = trimmedLine.substring(3).trim();
 
-        if (this.isStatusHeading(heading)) {
+        if (status === ADRStatus.UNKNOWN && this.isStatusHeading(heading)) {
           // Look for the next non-empty line after status heading
           for (let j = i + 1; j < lines.length; j++) {
             const nextLine = lines[j].trim();
@@ -108,14 +108,25 @@ export class ParseService implements IParseService {
       }
       // Only look for date in content if not found in filename AND before first H2
       else if (!hasSeenH2 && !date && this.isDateHeading(trimmedLine)) {
-        // Look for the next non-empty line after date keyword
-        for (let j = i + 1; j < lines.length; j++) {
-          const nextLine = lines[j].trim();
-          if (nextLine.length > 0) {
-            date = nextLine;
-            break;
+        // Try to extract date from the same line first (e.g., "Date: 2025-09-06")
+        const dateFromSameLine = this.extractDateFromLine(trimmedLine);
+        if (dateFromSameLine) {
+          date = dateFromSameLine;
+        } else {
+          // Fallback: Look for the next non-empty line after date keyword
+          for (let j = i + 1; j < lines.length; j++) {
+            const nextLine = lines[j].trim();
+            if (nextLine.length > 0) {
+              date = nextLine;
+              break;
+            }
           }
         }
+      }
+
+      // Early exit: if we have found all the metadata we need, stop parsing
+      if (title !== "Untitled ADR" && status !== ADRStatus.UNKNOWN && date) {
+        break;
       }
     }
 
@@ -143,9 +154,40 @@ export class ParseService implements IParseService {
   private isDateHeading(heading: string): boolean {
     const keywords = getAllFieldKeywords("date");
     const lowercaseHeading = heading.toLowerCase();
-    return keywords.some((keyword) =>
+    const isMatch = keywords.some((keyword) =>
       lowercaseHeading.includes(keyword.toLowerCase()),
     );
+
+    return isMatch;
+  }
+
+  /**
+   * Extracts date value from a line that contains both keyword and value
+   * Examples: "Date: 2025-09-06", "Created: 2023-01-15", etc.
+   */
+  private extractDateFromLine(line: string): string | undefined {
+    const keywords = getAllFieldKeywords("date");
+    const lowercaseLine = line.toLowerCase();
+    
+    for (const keyword of keywords) {
+      const keywordLower = keyword.toLowerCase();
+      if (lowercaseLine.includes(keywordLower)) {
+        // Look for patterns like "keyword: value" or "keyword value"
+        const patterns = [
+          new RegExp(`${keywordLower}\\s*:\\s*(.+)`, 'i'),
+          new RegExp(`${keywordLower}\\s+(.+)`, 'i')
+        ];
+        
+        for (const pattern of patterns) {
+          const match = line.match(pattern);
+          if (match && match[1]) {
+            return match[1].trim();
+          }
+        }
+      }
+    }
+    
+    return undefined;
   }
 
   /**

@@ -21,6 +21,7 @@ ADR Explorer Next is a Next.js-based web application for visualizing and navigat
 - `pnpm start` - Serve production build
 - `pnpm check` - Run Biome linting and formatting with automated fixing (per ADR-003)
 - `pnpm typecheck` - Run typescript compiler for type checking
+- `pnpm validate` - Run check & typecheck. Always run this at the end
 
 ## Three-Layer Component Architecture (ADR-004)
 
@@ -139,5 +140,5 @@ doc/adr/
 ## Development Workflow
 
 - **Testing changes**: User runs dev server locally, so no need to build after changes
-- **Code validation**: Run `pnpm check` and `pnpm typecheck` to validate changes
+- **Code validation**: Run `pnpm validate`to validate changes
 - **Build only when**: Explicitly requested or for production deployment

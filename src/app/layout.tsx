@@ -11,7 +11,7 @@ import {
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
-import { AppLayout } from "@/components";
+import { Layout } from "@/components";
 import { theme } from "@/lib/theme";
 import { FileService } from "@/services/fileService";
 
@@ -48,7 +48,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <MantineProvider theme={theme}>
-          <AppLayout directory={directory}>{children}</AppLayout>
+          <Layout directory={directory}>{children}</Layout>
         </MantineProvider>
       </body>
     </html>

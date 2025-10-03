@@ -3,9 +3,11 @@
 import {
   AppShell,
   Box,
+  Divider,
   Group,
   NavLink,
   ScrollArea,
+  Switch,
   Text,
   Title,
 } from "@mantine/core";
@@ -16,14 +18,14 @@ import { useI18n } from "@/hooks/useI18n";
 import type { ADRDirectory } from "@/types/adr";
 import { StatusBadge } from "../../molecules";
 
-interface AppSidebarProps {
+interface SidebarProps {
   directory: ADRDirectory;
 }
 
-export function AppSidebar({ directory }: AppSidebarProps) {
+export function Sidebar({ directory }: SidebarProps) {
   const pathname = usePathname();
   const { t } = useI18n();
-  const [showDates] = React.useState(true);
+  const [showDates, setShowDates] = React.useState(true);
 
   // Format date to show only YYYY-MM-DD
   const formatDate = (dateStr?: string): string => {
@@ -120,6 +122,22 @@ export function AppSidebar({ directory }: AppSidebarProps) {
 
       <AppShell.Section grow component={ScrollArea}>
         {renderDirectory(directory)}
+      </AppShell.Section>
+
+      {/* Bottom settings section */}
+      <AppShell.Section>
+        <Divider mb="md" />
+        <Group justify="space-between" align="center">
+          <Group gap="xs">
+            <Text size="sm">📅</Text>
+            <Text size="sm">Show dates</Text>
+          </Group>
+          <Switch
+            checked={showDates}
+            onChange={(event) => setShowDates(event.currentTarget.checked)}
+            size="sm"
+          />
+        </Group>
       </AppShell.Section>
     </AppShell.Navbar>
   );

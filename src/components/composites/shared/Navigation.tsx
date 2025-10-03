@@ -3,7 +3,7 @@
 import { AppShell } from "@mantine/core";
 import { AppHeader } from "./AppHeader";
 
-export function AppNavigation() {
+export function Navigation() {
   return (
     <AppShell.Header>
       <AppHeader />
