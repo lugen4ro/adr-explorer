@@ -51,10 +51,10 @@ export class FileService implements IFileService {
   }> {
     const directory = await this.discoverADRs();
     const allADRs = this.flattenADRs(directory);
-    
+
     // Copy images to public directory during build
     await this.copyImagesToPublic();
-    
+
     return { directory, allADRs };
   }
 
@@ -197,7 +197,7 @@ export class FileService implements IFileService {
     try {
       const contentPath = path.join(process.cwd(), "content", this.basePath);
       const publicPath = path.join(process.cwd(), "public", this.basePath);
-      
+
       await this.copyImagesRecursively(contentPath, publicPath);
     } catch (error) {
       console.warn("Failed to copy images to public directory:", error);
@@ -207,15 +207,18 @@ export class FileService implements IFileService {
   /**
    * Recursively copies image files from source to destination directory.
    */
-  private async copyImagesRecursively(srcDir: string, destDir: string): Promise<void> {
+  private async copyImagesRecursively(
+    srcDir: string,
+    destDir: string,
+  ): Promise<void> {
     try {
       const files = await fs.readdir(srcDir);
-      
+
       for (const file of files) {
         const srcPath = path.join(srcDir, file);
         const destPath = path.join(destDir, file);
         const stat = await fs.stat(srcPath);
-        
+
         if (stat.isDirectory()) {
           // Recursively copy subdirectories
           await this.copyImagesRecursively(srcPath, destPath);
@@ -234,7 +237,15 @@ export class FileService implements IFileService {
    * Checks if a file is an image based on its extension.
    */
   private isImageFile(fileName: string): boolean {
-    const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp', '.bmp'];
+    const imageExtensions = [
+      ".png",
+      ".jpg",
+      ".jpeg",
+      ".gif",
+      ".svg",
+      ".webp",
+      ".bmp",
+    ];
     const ext = path.extname(fileName).toLowerCase();
     return imageExtensions.includes(ext);
   }

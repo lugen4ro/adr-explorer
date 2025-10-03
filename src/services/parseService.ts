@@ -258,34 +258,34 @@ export class ParseService implements IParseService {
   /**
    * Transforms relative image paths in markdown content to absolute paths
    * that will work in the static build.
-   * 
+   *
    * Example: img/test.png -> /adr/img/test.png
    * This matches the copied location in public/adr/img/test.png
    * and resolves correctly from pages like /adr/0005-aaaaa
    */
   private transformImagePaths(content: string, filePath: string): string {
     // Get the directory containing the markdown file
-    const fileDir = filePath.replace(/[/\\][^/\\]*$/, ''); // Remove filename
-    
+    const fileDir = filePath.replace(/[/\\][^/\\]*$/, ""); // Remove filename
+
     // Transform relative image paths to absolute paths
     return content.replace(
       /!\[([^\]]*)\]\(([^)]+)\)/g,
       (match, altText, imagePath) => {
         // Skip if already absolute path
-        if (imagePath.startsWith('/') || imagePath.startsWith('http')) {
+        if (imagePath.startsWith("/") || imagePath.startsWith("http")) {
           return match;
         }
-        
+
         // Keep the path as-is to match the URL-encoded filenames in public directory
         const imagePath_cleaned = imagePath;
-        
+
         // Extract the relative path from content directory
         const contentMatch = fileDir.match(/content\/(.+)$/);
         if (contentMatch) {
           const relativePath = contentMatch[1];
-          
+
           // Transform to absolute path that works with basePath
-          if (imagePath.startsWith('./')) {
+          if (imagePath.startsWith("./")) {
             // Remove ./ prefix
             const cleanPath = imagePath_cleaned.substring(2);
             return `![${altText}](/${relativePath}/${cleanPath})`;
@@ -294,10 +294,10 @@ export class ParseService implements IParseService {
             return `![${altText}](/${relativePath}/${imagePath_cleaned})`;
           }
         }
-        
+
         // Fallback to original if we can't determine the path
         return match;
-      }
+      },
     );
   }
 
