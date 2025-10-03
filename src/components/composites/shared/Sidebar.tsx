@@ -120,8 +120,10 @@ export function Sidebar({ directory }: SidebarProps) {
         </Title>
       </AppShell.Section>
 
-      <AppShell.Section grow component={ScrollArea}>
-        {renderDirectory(directory)}
+      <AppShell.Section grow component={ScrollArea} scrollbarSize={0}>
+        <div style={{ marginRight: '16px' }}>
+          {renderDirectory(directory)}
+        </div>
       </AppShell.Section>
 
       {/* Bottom settings section */}
