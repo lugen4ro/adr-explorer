@@ -26,6 +26,7 @@ export function Sidebar({ directory }: SidebarProps) {
   const pathname = usePathname();
   const { t } = useI18n();
   const [showDates, setShowDates] = React.useState(true);
+  const [wrapTitles, setWrapTitles] = React.useState(false);
 
   // Format date to show only YYYY-MM-DD
   const formatDate = (dateStr?: string): string => {
@@ -76,23 +77,22 @@ export function Sidebar({ directory }: SidebarProps) {
             component={Link}
             href={`/adr/${adr.id}`}
             label={
-              <Box>
-                <Text>{adr.title}</Text>
+              <Group justify="space-between" align="flex-start" wrap={wrapTitles ? "wrap" : "nowrap"}>
+                <Text style={{ flex: 1, minWidth: 0 }} truncate={!wrapTitles}>
+                  {adr.title}
+                </Text>
                 {showDates && (
-                  <Group justify="space-between" mt={4}>
-                    <Box />
-                    {adr.date ? (
-                      <Text size="xs" c="dimmed">
-                        {formatDate(adr.date)}
-                      </Text>
-                    ) : (
-                      <Text size="xs" c="dimmed" fs="italic">
-                        no date
-                      </Text>
-                    )}
-                  </Group>
+                  adr.date ? (
+                    <Text size="xs" c="dimmed" style={{ flexShrink: 0 }}>
+                      {formatDate(adr.date)}
+                    </Text>
+                  ) : (
+                    <Text size="xs" c="dimmed" fs="italic" style={{ flexShrink: 0 }}>
+                      no date
+                    </Text>
+                  )
                 )}
-              </Box>
+              </Group>
             }
             leftSection={<StatusBadge status={adr.status} compact />}
             active={isActive}
@@ -127,7 +127,7 @@ export function Sidebar({ directory }: SidebarProps) {
       {/* Bottom settings section */}
       <AppShell.Section>
         <Divider mb="md" />
-        <Group justify="space-between" align="center">
+        <Group justify="space-between" align="center" mb="sm">
           <Group gap="xs">
             <Text size="sm">📅</Text>
             <Text size="sm">Show dates</Text>
@@ -135,6 +135,17 @@ export function Sidebar({ directory }: SidebarProps) {
           <Switch
             checked={showDates}
             onChange={(event) => setShowDates(event.currentTarget.checked)}
+            size="sm"
+          />
+        </Group>
+        <Group justify="space-between" align="center">
+          <Group gap="xs">
+            <Text size="sm">🔄</Text>
+            <Text size="sm">Wrap titles</Text>
+          </Group>
+          <Switch
+            checked={wrapTitles}
+            onChange={(event) => setWrapTitles(event.currentTarget.checked)}
             size="sm"
           />
         </Group>
