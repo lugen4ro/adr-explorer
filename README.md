@@ -90,7 +90,7 @@ For example for this repository it is [https://lugen4ro.github.io/adr-explorer/]
 - [x] Support non-English ADRs (Mainly Japanese)
 - [x] Support date extraction from filename
 - [x] Support nested ADR directory structures
-- [ ] Free-text search
+- [x] Free-text search
 - [ ] Support realtive links
 
 ## License
