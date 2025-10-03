@@ -86,10 +86,12 @@ For example for this repository it is [https://lugen4ro.github.io/adr-explorer/]
 
 - [x] Explore ADRs in modern UI
 - [x] Support ADR format of [adr-tools](https://github.com/npryce/adr-tools)
-- [ ] Search ADRs with title
-- [ ] Support ADRs with different format
-- [ ] Support nested ADR directory structures
-- [ ] Support non-English ADRs
+- [x] Support images, syntax colored code snippets & Mermaid charts
+- [x] Support non-English ADRs (Mainly Japanese)
+- [x] Support date extraction from filename
+- [x] Support nested ADR directory structures
+- [ ] Free-text search
+- [ ] Support realtive links
 
 ## License
 
