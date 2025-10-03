@@ -1,11 +1,16 @@
 "use client";
 
+import { useMantineColorScheme } from "@mantine/core";
 import mermaid from "mermaid";
 import Image from "next/image";
 import type React from "react";
 import { useEffect, useRef } from "react";
-import { useMantineColorScheme } from "@mantine/core";
 import ReactMarkdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import {
+  oneDark,
+  oneLight,
+} from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkGfm from "remark-gfm";
 import type { ADR } from "@/types/adr";
 
@@ -117,9 +122,9 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
         return (
           <code
             className={`px-1 py-0.5 rounded text-sm font-medium ${
-              isDark 
-                ? 'bg-slate-700 text-slate-200' 
-                : 'bg-gray-100 text-gray-700'
+              isDark
+                ? "bg-slate-700 text-slate-200"
+                : "bg-gray-100 text-gray-700"
             }`}
             {...rest}
           >
@@ -130,16 +135,23 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
 
       console.debug("Rendering block code:", String(children));
       return (
-        <code
-          className={`${className || ""} block p-4 my-6 rounded-lg overflow-x-auto ${
-            isDark 
-              ? 'bg-gray-800 text-gray-200' 
-              : 'bg-gray-50 text-gray-800'
-          }`}
-          {...rest}
+        <SyntaxHighlighter
+          language={language || "text"}
+          style={isDark ? oneDark : oneLight}
+          customStyle={{
+            margin: "1.5rem 0",
+            borderRadius: "0.5rem",
+            fontSize: "0.875rem",
+          }}
+          codeTagProps={{
+            style: {
+              fontFamily:
+                "ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace",
+            },
+          }}
         >
-          {children}
-        </code>
+          {String(children).replace(/\n$/, "")}
+        </SyntaxHighlighter>
       );
     },
     table: (props: TableProps) => (
@@ -153,9 +165,9 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
     th: (props: CellProps) => (
       <th
         className={`border px-4 py-2 text-left font-semibold ${
-          isDark 
-            ? 'border-gray-600 bg-gray-800 text-gray-200' 
-            : 'border-gray-300 bg-gray-50 text-gray-700'
+          isDark
+            ? "border-gray-600 bg-gray-800 text-gray-200"
+            : "border-gray-300 bg-gray-50 text-gray-700"
         }`}
         {...props}
       />
@@ -211,7 +223,10 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
       <ul className="list-disc ml-6 my-4 [&_ul]:my-1 [&_ol]:my-1" {...props} />
     ),
     ol: (props: OListProps) => (
-      <ol className="list-decimal ml-6 my-4 [&_ul]:my-1 [&_ol]:my-1" {...props} />
+      <ol
+        className="list-decimal ml-6 my-4 [&_ul]:my-1 [&_ol]:my-1"
+        {...props}
+      />
     ),
     a: (props: AnchorProps) => (
       <a
