@@ -166,18 +166,20 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
         {...props}
       />
     ),
-    img: (props: ImageProps) => (
-      <div className="my-4">
-        <Image
-          className="rounded-lg shadow-lg"
-          src={typeof props.src === "string" ? props.src : ""}
-          alt={props.alt || ""}
-          width={800}
-          height={400}
-          style={{ width: "auto", height: "auto", maxWidth: "100%" }}
-        />
-      </div>
-    ),
+    img: (props: ImageProps) => {
+      return (
+        <span className="block my-4">
+          <Image
+            className="rounded-lg shadow-lg"
+            src={typeof props.src === "string" ? props.src : ""}
+            alt={props.alt || ""}
+            width={800}
+            height={400}
+            style={{ width: "auto", height: "auto", maxWidth: "100%" }}
+          />
+        </span>
+      );
+    },
     h1: (props: HeadingProps) => (
       <h1
         className="text-4xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-4"
