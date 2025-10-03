@@ -1,12 +1,12 @@
 "use client";
 
 import { AppShell } from "@mantine/core";
-import { AppHeader } from "./AppHeader";
+import { Header } from "./Header";
 
 export function Navigation() {
   return (
     <AppShell.Header>
-      <AppHeader />
+      <Header />
     </AppShell.Header>
   );
 }

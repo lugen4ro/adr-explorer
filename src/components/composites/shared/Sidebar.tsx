@@ -2,7 +2,6 @@
 
 import {
   AppShell,
-  Box,
   Divider,
   Group,
   NavLink,
@@ -30,15 +29,13 @@ export function Sidebar({ directory }: SidebarProps) {
 
   // Format date to show only YYYY-MM-DD
   const formatDate = (dateStr?: string): string => {
-    console.log("formatDate input:", dateStr);
     if (!dateStr) {
-      console.log("No date provided");
       return "";
     }
 
     // If it's already in YYYY-MM-DD format, return as is
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-      console.log("Date already formatted:", dateStr);
+      console.debug("Date already formatted:", dateStr);
       return dateStr;
     }
 
@@ -47,12 +44,12 @@ export function Sidebar({ directory }: SidebarProps) {
       const date = new Date(dateStr);
       if (!Number.isNaN(date.getTime())) {
         const formatted = date.toISOString().split("T")[0];
-        console.log("Date formatted to:", formatted);
+        console.debug("Date formatted to:", formatted);
         return formatted;
       }
     } catch {
       // If parsing fails, return original string
-      console.log("Date parsing failed, returning original:", dateStr);
+      console.debug("Date parsing failed, returning original:", dateStr);
     }
 
     return dateStr;
@@ -68,8 +65,9 @@ export function Sidebar({ directory }: SidebarProps) {
 
       {dir.adrs.map((adr) => {
         const expectedPath = `/adr/${adr.id}`;
-        const isActive =
-          pathname === expectedPath || pathname === `${expectedPath}/`;
+        // Decode the pathname to handle URL encoding
+        const decodedPathname = decodeURIComponent(pathname);
+        const isActive = decodedPathname === `${expectedPath}/`;
 
         return (
           <NavLink
@@ -77,21 +75,29 @@ export function Sidebar({ directory }: SidebarProps) {
             component={Link}
             href={`/adr/${adr.id}`}
             label={
-              <Group justify="space-between" align="flex-start" wrap={wrapTitles ? "wrap" : "nowrap"}>
+              <Group
+                justify="space-between"
+                align="flex-start"
+                wrap={wrapTitles ? "wrap" : "nowrap"}
+              >
                 <Text style={{ flex: 1, minWidth: 0 }} truncate={!wrapTitles}>
                   {adr.title}
                 </Text>
-                {showDates && (
-                  adr.date ? (
+                {showDates &&
+                  (adr.date ? (
                     <Text size="xs" c="dimmed" style={{ flexShrink: 0 }}>
                       {formatDate(adr.date)}
                     </Text>
                   ) : (
-                    <Text size="xs" c="dimmed" fs="italic" style={{ flexShrink: 0 }}>
+                    <Text
+                      size="xs"
+                      c="dimmed"
+                      fs="italic"
+                      style={{ flexShrink: 0 }}
+                    >
                       no date
                     </Text>
-                  )
-                )}
+                  ))}
               </Group>
             }
             leftSection={<StatusBadge status={adr.status} compact />}
@@ -103,6 +109,14 @@ export function Sidebar({ directory }: SidebarProps) {
                 alignSelf: "flex-start",
                 marginTop: "5px",
               },
+              root: isActive
+                ? {
+                    backgroundColor: "var(--mantine-color-default-hover)",
+                    "&:hover": {
+                      backgroundColor: "var(--mantine-color-default-hover)",
+                    },
+                  }
+                : undefined,
             }}
           />
         );
@@ -121,9 +135,7 @@ export function Sidebar({ directory }: SidebarProps) {
       </AppShell.Section>
 
       <AppShell.Section grow component={ScrollArea} scrollbarSize={0}>
-        <div style={{ marginRight: '16px' }}>
-          {renderDirectory(directory)}
-        </div>
+        <div style={{ marginRight: "16px" }}>{renderDirectory(directory)}</div>
       </AppShell.Section>
 
       {/* Bottom settings section */}

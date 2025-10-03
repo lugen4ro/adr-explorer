@@ -168,16 +168,16 @@ export class ParseService implements IParseService {
   private extractDateFromLine(line: string): string | undefined {
     const keywords = getAllFieldKeywords("date");
     const lowercaseLine = line.toLowerCase();
-    
+
     for (const keyword of keywords) {
       const keywordLower = keyword.toLowerCase();
       if (lowercaseLine.includes(keywordLower)) {
         // Look for patterns like "keyword: value" or "keyword value"
         const patterns = [
-          new RegExp(`${keywordLower}\\s*:\\s*(.+)`, 'i'),
-          new RegExp(`${keywordLower}\\s+(.+)`, 'i')
+          new RegExp(`${keywordLower}\\s*:\\s*(.+)`, "i"),
+          new RegExp(`${keywordLower}\\s+(.+)`, "i"),
         ];
-        
+
         for (const pattern of patterns) {
           const match = line.match(pattern);
           if (match && match[1]) {
@@ -186,7 +186,7 @@ export class ParseService implements IParseService {
         }
       }
     }
-    
+
     return undefined;
   }
 
@@ -252,17 +252,6 @@ export class ParseService implements IParseService {
       }
     }
 
-    // Only log when no match is found
-    console.log(
-      `[DEBUG] Status parsing failed for: "${statusString}" (normalized: "${normalized}")`,
-    );
-    console.log(
-      `[DEBUG] Available keywords:`,
-      Object.entries(i18nConfig.statusValues).map(([status, langs]) => ({
-        status,
-        keywords: Object.values(langs).flat(),
-      })),
-    );
     return ADRStatus.UNKNOWN;
   }
 

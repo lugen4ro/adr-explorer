@@ -100,13 +100,6 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
       const isInline =
         inline === true || (!className && !String(children).includes("\n"));
 
-      console.log("Code component props:", {
-        inline,
-        className,
-        children: String(children),
-        isInline,
-      });
-
       if (!isInline && language === "mermaid") {
         return (
           <MermaidComponent>
@@ -116,7 +109,7 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
       }
 
       if (isInline) {
-        console.log("Rendering inline code:", String(children));
+        console.debug("Rendering inline code:", String(children));
         return (
           <code
             className="bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100 px-1 py-0.5 rounded text-sm font-medium"
@@ -127,7 +120,7 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
         );
       }
 
-      console.log("Rendering block code:", String(children));
+      console.debug("Rendering block code:", String(children));
       return (
         <code
           className={`${className || ""} block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto`}
