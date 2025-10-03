@@ -4,6 +4,7 @@ import mermaid from "mermaid";
 import Image from "next/image";
 import type React from "react";
 import { useEffect, useRef } from "react";
+import { useMantineColorScheme } from "@mantine/core";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { ADR } from "@/types/adr";
@@ -90,6 +91,9 @@ const MermaidComponent: React.FC<{ children: string }> = ({ children }) => {
 };
 
 export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === "dark";
+
   const components = {
     code: (props: CodeProps) => {
       const { inline, className, children, ...rest } = props;
@@ -112,7 +116,11 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
         console.debug("Rendering inline code:", String(children));
         return (
           <code
-            className="bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100 px-1 py-0.5 rounded text-sm font-medium"
+            className={`px-1 py-0.5 rounded text-sm font-medium ${
+              isDark 
+                ? 'bg-slate-700 text-slate-200' 
+                : 'bg-gray-100 text-gray-700'
+            }`}
             {...rest}
           >
             {children}
@@ -123,7 +131,11 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
       console.debug("Rendering block code:", String(children));
       return (
         <code
-          className={`${className || ""} block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto`}
+          className={`${className || ""} block p-4 my-6 rounded-lg overflow-x-auto ${
+            isDark 
+              ? 'bg-gray-800 text-gray-200' 
+              : 'bg-gray-50 text-gray-800'
+          }`}
           {...rest}
         >
           {children}
@@ -131,7 +143,7 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
       );
     },
     table: (props: TableProps) => (
-      <div className="overflow-x-auto my-4">
+      <div className="overflow-x-auto my-6">
         <table
           className="min-w-full border-collapse border border-gray-300 dark:border-gray-600"
           {...props}
@@ -140,7 +152,11 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
     ),
     th: (props: CellProps) => (
       <th
-        className="border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-2 text-left font-semibold"
+        className={`border px-4 py-2 text-left font-semibold ${
+          isDark 
+            ? 'border-gray-600 bg-gray-800 text-gray-200' 
+            : 'border-gray-300 bg-gray-50 text-gray-700'
+        }`}
         {...props}
       />
     ),
