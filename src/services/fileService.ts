@@ -228,7 +228,7 @@ export class FileService implements IFileService {
           await fs.copyFile(srcPath, destPath);
         }
       }
-    } catch (error) {
+    } catch (_error) {
       // Silently continue if directory doesn't exist or can't be read
     }
   }
