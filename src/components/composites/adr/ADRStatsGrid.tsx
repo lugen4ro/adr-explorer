@@ -1,4 +1,5 @@
 import { SimpleGrid } from "@mantine/core";
+import { getStatusColor } from "@/lib/statusColors";
 import type { ADRDirectory } from "@/types/adr";
 import { StatCard } from "../../molecules";
 
@@ -7,14 +8,16 @@ export interface ADRStatsGridProps {
 }
 
 export function ADRStatsGrid({ directory }: ADRStatsGridProps) {
-  const totalADRs =
-    directory.adrs.length +
-    directory.subdirectories.reduce(
-      (sum, subdir) => sum + subdir.adrs.length,
-      0,
-    );
+  // Get all ADRs from directory and subdirectories
+  const allADRs = [
+    ...directory.adrs,
+    ...directory.subdirectories.flatMap((subdir) => subdir.adrs),
+  ];
 
-  const statusCounts = directory.adrs.reduce(
+  const totalADRs = allADRs.length;
+
+  // Count all status types across all ADRs
+  const statusCounts = allADRs.reduce(
     (acc, adr) => {
       const status = adr.status.toLowerCase();
       acc[status] = (acc[status] || 0) + 1;
@@ -23,19 +26,24 @@ export function ADRStatsGrid({ directory }: ADRStatsGridProps) {
     {} as Record<string, number>,
   );
 
+  // Get the most common statuses to display
+  const statusEntries = Object.entries(statusCounts)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 4); // Show top 4 statuses
+
   return (
-    <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
+    <SimpleGrid cols={{ base: 2, md: 4 }} spacing="lg">
       <StatCard title="Total ADRs" value={totalADRs} color="blue" />
-      <StatCard
-        title="Categories"
-        value={directory.subdirectories.length + 1}
-        color="green"
-      />
-      <StatCard
-        title="Accepted"
-        value={statusCounts.accepted || 0}
-        color="purple"
-      />
+      {statusEntries.map(([status, count]) => {
+        return (
+          <StatCard
+            key={status}
+            title={status.charAt(0).toUpperCase() + status.slice(1)}
+            value={count}
+            color={getStatusColor(status)}
+          />
+        );
+      })}
     </SimpleGrid>
   );
 }

@@ -1,3 +1,5 @@
+export type { ADRHistogramProps } from "./ADRHistogram";
+export { ADRHistogram } from "./ADRHistogram";
 export type { LanguageSelectorProps } from "./LanguageSelector";
 export { LanguageSelector } from "./LanguageSelector";
 export type { SearchBoxProps } from "./SearchBox";

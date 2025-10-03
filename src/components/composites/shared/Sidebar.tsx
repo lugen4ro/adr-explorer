@@ -58,9 +58,33 @@ export function Sidebar({ directory }: SidebarProps) {
   const renderDirectory = (dir: ADRDirectory, level = 0) => (
     <React.Fragment key={dir.path}>
       {level > 0 && (
-        <Title order={5} size="sm" c="dimmed" mb="xs" ml={level * 16}>
-          {dir.name}
-        </Title>
+        <div
+          style={{
+            position: "sticky",
+            top: "0px",
+            zIndex: 10,
+            backgroundColor: "var(--mantine-color-body)",
+            padding: "8px 16px",
+            margin: "0 -16px 8px -16px",
+            borderBottom: "2px solid var(--mantine-color-blue-6)",
+            width: "calc(100% + 32px)",
+          }}
+        >
+          <Title
+            order={4}
+            size="md"
+            c="blue"
+            fw={700}
+            tt="capitalize"
+            style={{
+              fontSize: "1.1rem",
+              letterSpacing: "0.5px",
+              marginLeft: level * 16,
+            }}
+          >
+            {dir.name}
+          </Title>
+        </div>
       )}
 
       {dir.adrs.map((adr) => {
