@@ -46,6 +46,10 @@ type ImageProps = React.DetailedHTMLProps<
   React.ImgHTMLAttributes<HTMLImageElement>,
   HTMLImageElement
 >;
+type AnchorProps = React.DetailedHTMLProps<
+  React.AnchorHTMLAttributes<HTMLAnchorElement>,
+  HTMLAnchorElement
+>;
 
 interface ADRRendererProps {
   adr: ADR;
@@ -197,6 +201,12 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
     ),
     ol: (props: OListProps) => (
       <ol className="list-decimal ml-6 my-4 space-y-2" {...props} />
+    ),
+    a: (props: AnchorProps) => (
+      <a
+        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline hover:no-underline transition-colors duration-200"
+        {...props}
+      />
     ),
   };
 
