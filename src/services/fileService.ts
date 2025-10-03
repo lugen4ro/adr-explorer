@@ -41,6 +41,7 @@ export class FileService implements IFileService {
 
   /**
    * Gets all ADRs in both hierarchical and flattened formats.
+   * Also copies any associated images to the public directory during build.
    *
    * @returns Promise that resolves to an object containing both the directory structure and flattened array
    */
@@ -50,6 +51,10 @@ export class FileService implements IFileService {
   }> {
     const directory = await this.discoverADRs();
     const allADRs = this.flattenADRs(directory);
+    
+    // Copy images to public directory during build
+    await this.copyImagesToPublic();
+    
     return { directory, allADRs };
   }
 
@@ -182,5 +187,55 @@ export class FileService implements IFileService {
     } catch (_error) {
       throw new Error(`Failed to load ADR: ${filePath}`);
     }
+  }
+
+  /**
+   * Copies all images from content directories to the public directory
+   * maintaining the same relative structure for proper static serving.
+   */
+  private async copyImagesToPublic(): Promise<void> {
+    try {
+      const contentPath = path.join(process.cwd(), "content", this.basePath);
+      const publicPath = path.join(process.cwd(), "public", this.basePath);
+      
+      await this.copyImagesRecursively(contentPath, publicPath);
+    } catch (error) {
+      console.warn("Failed to copy images to public directory:", error);
+    }
+  }
+
+  /**
+   * Recursively copies image files from source to destination directory.
+   */
+  private async copyImagesRecursively(srcDir: string, destDir: string): Promise<void> {
+    try {
+      const files = await fs.readdir(srcDir);
+      
+      for (const file of files) {
+        const srcPath = path.join(srcDir, file);
+        const destPath = path.join(destDir, file);
+        const stat = await fs.stat(srcPath);
+        
+        if (stat.isDirectory()) {
+          // Recursively copy subdirectories
+          await this.copyImagesRecursively(srcPath, destPath);
+        } else if (this.isImageFile(file)) {
+          // Copy image files
+          await fs.mkdir(path.dirname(destPath), { recursive: true });
+          await fs.copyFile(srcPath, destPath);
+        }
+      }
+    } catch (error) {
+      // Silently continue if directory doesn't exist or can't be read
+    }
+  }
+
+  /**
+   * Checks if a file is an image based on its extension.
+   */
+  private isImageFile(fileName: string): boolean {
+    const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp', '.bmp'];
+    const ext = path.extname(fileName).toLowerCase();
+    return imageExtensions.includes(ext);
   }
 }

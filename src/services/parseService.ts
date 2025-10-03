@@ -32,7 +32,7 @@ export class ParseService implements IParseService {
       status,
       date,
       path: filePath,
-      content,
+      content: this.transformImagePaths(content, filePath),
       category: this.extractCategory(filePath),
     };
   }
@@ -253,6 +253,52 @@ export class ParseService implements IParseService {
     }
 
     return ADRStatus.UNKNOWN;
+  }
+
+  /**
+   * Transforms relative image paths in markdown content to absolute paths
+   * that will work in the static build.
+   * 
+   * Example: img/test.png -> /adr/img/test.png
+   * This matches the copied location in public/adr/img/test.png
+   * and resolves correctly from pages like /adr/0005-aaaaa
+   */
+  private transformImagePaths(content: string, filePath: string): string {
+    // Get the directory containing the markdown file
+    const fileDir = filePath.replace(/[/\\][^/\\]*$/, ''); // Remove filename
+    
+    // Transform relative image paths to absolute paths
+    return content.replace(
+      /!\[([^\]]*)\]\(([^)]+)\)/g,
+      (match, altText, imagePath) => {
+        // Skip if already absolute path
+        if (imagePath.startsWith('/') || imagePath.startsWith('http')) {
+          return match;
+        }
+        
+        // Decode URL-encoded characters in the image path
+        const decodedPath = decodeURIComponent(imagePath);
+        
+        // Extract the relative path from content directory
+        const contentMatch = fileDir.match(/content\/(.+)$/);
+        if (contentMatch) {
+          const relativePath = contentMatch[1];
+          
+          // Transform to absolute path that works with basePath
+          if (imagePath.startsWith('./')) {
+            // Remove ./ prefix
+            const cleanPath = decodedPath.substring(2);
+            return `![${altText}](/${relativePath}/${cleanPath})`;
+          } else {
+            // Direct relative path like img/test.png
+            return `![${altText}](/${relativePath}/${decodedPath})`;
+          }
+        }
+        
+        // Fallback to original if we can't determine the path
+        return match;
+      }
+    );
   }
 
   /**
