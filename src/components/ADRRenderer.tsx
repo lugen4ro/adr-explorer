@@ -189,7 +189,7 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
     ),
     h2: (props: HeadingProps) => (
       <h2
-        className="text-3xl font-semibold mt-8 mb-4"
+        className="text-3xl font-semibold mt-8 mb-4 pb-3 border-b border-gray-200 dark:border-gray-600 bg-gradient-to-r from-blue-50 to-transparent dark:from-blue-600/25 dark:to-transparent px-4 py-2 rounded-r-lg border-l-4 border-blue-500 dark:border-blue-400"
         style={{ color: "var(--mantine-color-text)" }}
         {...props}
       />
