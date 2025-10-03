@@ -15,24 +15,19 @@ export function ADRCard({ adr }: ADRCardProps) {
       style={{ textDecoration: "none", color: "inherit" }}
     >
       <Card style={{ cursor: "pointer" }}>
-        <Group gap="sm" mb="xs" align="flex-start">
-          <StatusBadge status={adr.status} compact />
-          <Title order={4} lineClamp={2} style={{ flex: 1 }}>
-            {adr.title}
-          </Title>
+        <Group gap="sm" align="flex-start" justify="space-between">
+          <Group gap="sm" align="flex-start" style={{ flex: 1, minWidth: 0 }}>
+            <StatusBadge status={adr.status} compact />
+            <Title order={4} lineClamp={2} style={{ flex: 1 }}>
+              {adr.title}
+            </Title>
+          </Group>
+          {adr.date && (
+            <Text size="xs" c="dimmed" style={{ flexShrink: 0 }}>
+              {adr.date}
+            </Text>
+          )}
         </Group>
-
-        {adr.category && adr.category.toLowerCase() !== "adr" && (
-          <Text size="sm" c="dimmed" mb="xs">
-            {adr.category}
-          </Text>
-        )}
-
-        {adr.date && (
-          <Text size="xs" c="dimmed">
-            {adr.date}
-          </Text>
-        )}
       </Card>
     </Link>
   );
