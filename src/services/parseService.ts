@@ -276,8 +276,8 @@ export class ParseService implements IParseService {
           return match;
         }
         
-        // Decode URL-encoded characters in the image path
-        const decodedPath = decodeURIComponent(imagePath);
+        // Keep the path as-is to match the URL-encoded filenames in public directory
+        const imagePath_cleaned = imagePath;
         
         // Extract the relative path from content directory
         const contentMatch = fileDir.match(/content\/(.+)$/);
@@ -287,11 +287,11 @@ export class ParseService implements IParseService {
           // Transform to absolute path that works with basePath
           if (imagePath.startsWith('./')) {
             // Remove ./ prefix
-            const cleanPath = decodedPath.substring(2);
+            const cleanPath = imagePath_cleaned.substring(2);
             return `![${altText}](/${relativePath}/${cleanPath})`;
           } else {
             // Direct relative path like img/test.png
-            return `![${altText}](/${relativePath}/${decodedPath})`;
+            return `![${altText}](/${relativePath}/${imagePath_cleaned})`;
           }
         }
         
