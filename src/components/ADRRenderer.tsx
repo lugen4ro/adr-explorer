@@ -208,10 +208,10 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
       />
     ),
     ul: (props: UListProps) => (
-      <ul className="list-disc ml-6 my-4 space-y-2" {...props} />
+      <ul className="list-disc ml-6 my-4 [&_ul]:my-1 [&_ol]:my-1" {...props} />
     ),
     ol: (props: OListProps) => (
-      <ol className="list-decimal ml-6 my-4 space-y-2" {...props} />
+      <ol className="list-decimal ml-6 my-4 [&_ul]:my-1 [&_ol]:my-1" {...props} />
     ),
     a: (props: AnchorProps) => (
       <a
