@@ -198,6 +198,8 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
     a: (props: AnchorProps) => (
       <a
         className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline hover:no-underline transition-colors duration-200"
+        target="_blank"
+        rel="noopener noreferrer"
         {...props}
       />
     ),
