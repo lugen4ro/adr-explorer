@@ -35,7 +35,7 @@ export function Sidebar({ directory }: SidebarProps) {
 
     // If it's already in YYYY-MM-DD format, return as is
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-      console.debug("Date already formatted:", dateStr);
+      // console.debug("Date already formatted:", dateStr);
       return dateStr;
     }
 
