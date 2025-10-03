@@ -32,7 +32,7 @@ export function ADRStatsGrid({ directory }: ADRStatsGridProps) {
     .slice(0, 4); // Show top 4 statuses
 
   return (
-    <SimpleGrid cols={{ base: 2, md: 4 }} spacing="lg">
+    <SimpleGrid cols={{ base: 4, sm: 4, md: 4 }} spacing="lg">
       <StatCard title="Total ADRs" value={totalADRs} color="blue" />
       {statusEntries.map(([status, count]) => {
         return (

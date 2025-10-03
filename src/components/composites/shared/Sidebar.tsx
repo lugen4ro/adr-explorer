@@ -9,13 +9,15 @@ import {
   Switch,
   Text,
   Title,
+  Stack,
 } from "@mantine/core";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { useI18n } from "@/hooks/useI18n";
+import { useADRSearch } from "@/hooks/useADRSearch";
 import type { ADRDirectory } from "@/types/adr";
-import { StatusBadge } from "../../molecules";
+import { StatusBadge, SearchBox } from "../../molecules";
 
 interface SidebarProps {
   directory: ADRDirectory;
@@ -26,6 +28,15 @@ export function Sidebar({ directory }: SidebarProps) {
   const { t } = useI18n();
   const [showDates, setShowDates] = React.useState(true);
   const [wrapTitles, setWrapTitles] = React.useState(false);
+  
+  // Search functionality
+  const {
+    searchQuery,
+    setSearchQuery,
+    filteredDirectory,
+    hasResults,
+    resultCount,
+  } = useADRSearch(directory);
 
   // Format date to show only YYYY-MM-DD
   const formatDate = (dateStr?: string): string => {
@@ -153,13 +164,40 @@ export function Sidebar({ directory }: SidebarProps) {
   return (
     <AppShell.Navbar p="md">
       <AppShell.Section>
-        <Title order={4} mb="md">
-          {t("architectureDecisions")}
-        </Title>
+        <Stack gap="md">
+          <Title order={4}>
+            {t("architectureDecisions")}
+          </Title>
+          
+          {/* Search Box */}
+          <SearchBox
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder={t("search")}
+          />
+          
+          {/* Search Results Counter */}
+          {searchQuery.trim() && (
+            <Text size="sm" c="dimmed">
+              {hasResults 
+                ? `${resultCount} result${resultCount !== 1 ? 's' : ''} found`
+                : "No results found"
+              }
+            </Text>
+          )}
+        </Stack>
       </AppShell.Section>
 
       <AppShell.Section grow component={ScrollArea} scrollbarSize={0}>
-        <div style={{ marginRight: "16px" }}>{renderDirectory(directory)}</div>
+        <div style={{ marginRight: "16px" }}>
+          {hasResults ? (
+            renderDirectory(filteredDirectory)
+          ) : (
+            <Text size="sm" c="dimmed" ta="center" mt="lg">
+              No ADRs match your search
+            </Text>
+          )}
+        </div>
       </AppShell.Section>
 
       {/* Bottom settings section */}

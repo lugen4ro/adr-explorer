@@ -29,3 +29,25 @@ export interface IFileService {
     allADRs: ADR[];
   }>;
 }
+
+/**
+ * Interface for ADR search services.
+ */
+export interface ISearchService {
+  /**
+   * Searches ADRs in a directory structure based on a text query.
+   *
+   * @param directory - The ADR directory structure to search
+   * @param query - The search query (case-insensitive)
+   * @returns A filtered directory structure containing only matching ADRs
+   */
+  searchADRs(directory: ADRDirectory, query: string): ADRDirectory;
+
+  /**
+   * Counts the total number of ADRs in a directory structure.
+   *
+   * @param directory - The directory structure to count
+   * @returns Total number of ADRs
+   */
+  countADRs(directory: ADRDirectory): number;
+}
