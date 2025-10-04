@@ -6,6 +6,8 @@ export type { AppButtonProps } from "./Button";
 export { Button } from "./Button";
 export type { AppCardProps } from "./Card";
 export { Card } from "./Card";
+export type { HighlightedTextProps } from "./HighlightedText";
+export { HighlightedText } from "./HighlightedText";
 export type { AppSelectProps } from "./Select";
 export { Select } from "./Select";
 export type { AppTextInputProps } from "./TextInput";

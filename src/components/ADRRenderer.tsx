@@ -4,7 +4,7 @@ import { useMantineColorScheme } from "@mantine/core";
 import mermaid from "mermaid";
 import Image from "next/image";
 import type React from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import {
@@ -12,6 +12,7 @@ import {
   oneLight,
 } from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkGfm from "remark-gfm";
+import { getHighlightStyles } from "@/lib/searchHighlight";
 import type { ADR } from "@/types/adr";
 
 // Proper types for react-markdown components
@@ -59,6 +60,7 @@ type AnchorProps = React.DetailedHTMLProps<
 
 interface ADRRendererProps {
   adr: ADR;
+  searchTerms?: string[];
 }
 
 const MermaidComponent: React.FC<{ children: string }> = ({ children }) => {
@@ -95,9 +97,67 @@ const MermaidComponent: React.FC<{ children: string }> = ({ children }) => {
   return <div ref={ref} className="my-4 bg-white p-4 rounded border" />;
 };
 
-export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
+// Helper function to highlight search terms in text
+const highlightSearchTerms = (
+  text: string,
+  searchTerms: string[] = [],
+): React.ReactNode => {
+  if (!searchTerms.length || !searchTerms.some((term) => term.trim())) {
+    return text;
+  }
+
+  const filteredTerms = searchTerms.filter((term) => term.trim());
+
+  if (!filteredTerms.length) {
+    return text;
+  }
+
+  // Create regex pattern for all search terms (case-insensitive)
+  const pattern = new RegExp(
+    `(${filteredTerms
+      .map(
+        (term) => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), // Escape special regex characters
+      )
+      .join("|")})`,
+    "gi",
+  );
+
+  const parts = text.split(pattern);
+
+  return parts.map((part, index) => {
+    const isMatch = filteredTerms.some(
+      (term) => part.toLowerCase() === term.toLowerCase(),
+    );
+
+    return isMatch ? (
+      <mark
+        // biome-ignore lint/suspicious/noArrayIndexKey: Highlighting text parts need stable ordering
+        key={index}
+        style={getHighlightStyles()}
+      >
+        {part}
+      </mark>
+    ) : (
+      part
+    );
+  });
+};
+
+export const ADRRenderer: React.FC<ADRRendererProps> = ({
+  adr,
+  searchTerms = [],
+}) => {
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === "dark";
+  const [isClientSide, setIsClientSide] = useState(false);
+
+  // Ensure highlighting only happens on client-side to avoid hydration errors
+  useEffect(() => {
+    setIsClientSide(true);
+  }, []);
+
+  // Only apply search highlighting after client-side hydration
+  const shouldHighlight = isClientSide && searchTerms.length > 0;
 
   const components = {
     code: (props: CodeProps) => {
@@ -192,27 +252,69 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
         </span>
       );
     },
-    h1: (props: HeadingProps) => (
-      <h1
-        className="text-4xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-4"
-        style={{ color: "var(--mantine-color-text)" }}
-        {...props}
-      />
-    ),
-    h2: (props: HeadingProps) => (
-      <h2
-        className="text-3xl font-semibold mt-8 mb-4 pb-3 border-b border-gray-200 dark:border-gray-600 bg-gradient-to-r from-blue-50 to-transparent dark:from-blue-600/25 dark:to-transparent px-4 py-2 rounded-r-lg border-l-4 border-blue-500 dark:border-blue-400"
-        style={{ color: "var(--mantine-color-text)" }}
-        {...props}
-      />
-    ),
-    h3: (props: HeadingProps) => (
-      <h3
-        className="text-2xl font-semibold mt-6 mb-3"
-        style={{ color: "var(--mantine-color-text)" }}
-        {...props}
-      />
-    ),
+    h1: (props: HeadingProps) => {
+      if (typeof props.children === "string" && shouldHighlight) {
+        return (
+          <h1
+            className="text-4xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-4"
+            style={{ color: "var(--mantine-color-text)" }}
+            {...props}
+          >
+            {highlightSearchTerms(props.children, searchTerms)}
+          </h1>
+        );
+      }
+
+      return (
+        <h1
+          className="text-4xl font-bold mb-6 border-b border-gray-200 dark:border-gray-700 pb-4"
+          style={{ color: "var(--mantine-color-text)" }}
+          {...props}
+        />
+      );
+    },
+    h2: (props: HeadingProps) => {
+      if (typeof props.children === "string" && shouldHighlight) {
+        return (
+          <h2
+            className="text-3xl font-semibold mt-8 mb-4 pb-3 border-b border-gray-200 dark:border-gray-600 bg-gradient-to-r from-blue-50 to-transparent dark:from-blue-600/25 dark:to-transparent px-4 py-2 rounded-r-lg border-l-4 border-blue-500 dark:border-blue-400"
+            style={{ color: "var(--mantine-color-text)" }}
+            {...props}
+          >
+            {highlightSearchTerms(props.children, searchTerms)}
+          </h2>
+        );
+      }
+
+      return (
+        <h2
+          className="text-3xl font-semibold mt-8 mb-4 pb-3 border-b border-gray-200 dark:border-gray-600 bg-gradient-to-r from-blue-50 to-transparent dark:from-blue-600/25 dark:to-transparent px-4 py-2 rounded-r-lg border-l-4 border-blue-500 dark:border-blue-400"
+          style={{ color: "var(--mantine-color-text)" }}
+          {...props}
+        />
+      );
+    },
+    h3: (props: HeadingProps) => {
+      if (typeof props.children === "string" && shouldHighlight) {
+        return (
+          <h3
+            className="text-2xl font-semibold mt-6 mb-3"
+            style={{ color: "var(--mantine-color-text)" }}
+            {...props}
+          >
+            {highlightSearchTerms(props.children, searchTerms)}
+          </h3>
+        );
+      }
+
+      return (
+        <h3
+          className="text-2xl font-semibold mt-6 mb-3"
+          style={{ color: "var(--mantine-color-text)" }}
+          {...props}
+        />
+      );
+    },
     blockquote: (props: BlockquoteProps) => (
       <blockquote
         className="border-l-4 border-blue-500 pl-4 my-4 italic text-gray-600 dark:text-gray-400"
@@ -236,6 +338,38 @@ export const ADRRenderer: React.FC<ADRRendererProps> = ({ adr }) => {
         {...props}
       />
     ),
+    p: (
+      props: React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLParagraphElement>,
+        HTMLParagraphElement
+      >,
+    ) => {
+      if (typeof props.children === "string" && shouldHighlight) {
+        return (
+          <p className="my-4 leading-relaxed" {...props}>
+            {highlightSearchTerms(props.children, searchTerms)}
+          </p>
+        );
+      }
+
+      return <p className="my-4 leading-relaxed" {...props} />;
+    },
+    li: (
+      props: React.DetailedHTMLProps<
+        React.LiHTMLAttributes<HTMLLIElement>,
+        HTMLLIElement
+      >,
+    ) => {
+      if (typeof props.children === "string" && shouldHighlight) {
+        return (
+          <li {...props}>
+            {highlightSearchTerms(props.children, searchTerms)}
+          </li>
+        );
+      }
+
+      return <li {...props} />;
+    },
   };
 
   return (

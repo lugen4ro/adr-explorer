@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import type React from "react";
 import { ADRRenderer } from "@/components/ADRRenderer";
 import { useI18n } from "@/hooks/useI18n";
@@ -11,6 +12,14 @@ interface ADRPageContentProps {
 
 export const ADRPageContent: React.FC<ADRPageContentProps> = ({ adr }) => {
   const { t } = useI18n();
+  const searchParams = useSearchParams();
+
+  // Extract search terms from URL params
+  const searchQuery = searchParams.get("search") || "";
+  const searchTerms = searchQuery
+    .trim()
+    .split(/\s+/)
+    .filter((term) => term.length > 0);
 
   if (!adr) {
     return (
@@ -27,5 +36,5 @@ export const ADRPageContent: React.FC<ADRPageContentProps> = ({ adr }) => {
     );
   }
 
-  return <ADRRenderer adr={adr} />;
+  return <ADRRenderer adr={adr} searchTerms={searchTerms} />;
 };

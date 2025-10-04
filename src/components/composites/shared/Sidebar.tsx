@@ -6,18 +6,19 @@ import {
   Group,
   NavLink,
   ScrollArea,
+  Stack,
   Switch,
   Text,
   Title,
-  Stack,
 } from "@mantine/core";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { useI18n } from "@/hooks/useI18n";
 import { useADRSearch } from "@/hooks/useADRSearch";
+import { useI18n } from "@/hooks/useI18n";
 import type { ADRDirectory } from "@/types/adr";
-import { StatusBadge, SearchBox } from "../../molecules";
+import { HighlightedText } from "../../atoms";
+import { SearchBox, StatusBadge } from "../../molecules";
 
 interface SidebarProps {
   directory: ADRDirectory;
@@ -28,7 +29,7 @@ export function Sidebar({ directory }: SidebarProps) {
   const { t } = useI18n();
   const [showDates, setShowDates] = React.useState(true);
   const [wrapTitles, setWrapTitles] = React.useState(false);
-  
+
   // Search functionality
   const {
     searchQuery,
@@ -36,6 +37,8 @@ export function Sidebar({ directory }: SidebarProps) {
     filteredDirectory,
     hasResults,
     resultCount,
+    searchTerms,
+    clearSearch,
   } = useADRSearch(directory);
 
   // Format date to show only YYYY-MM-DD
@@ -104,20 +107,27 @@ export function Sidebar({ directory }: SidebarProps) {
         const decodedPathname = decodeURIComponent(pathname);
         const isActive = decodedPathname === `${expectedPath}/`;
 
+        const href = searchQuery.trim()
+          ? `/adr/${adr.id}?search=${encodeURIComponent(searchQuery.trim())}`
+          : `/adr/${adr.id}`;
+
         return (
           <NavLink
             key={adr.id}
             component={Link}
-            href={`/adr/${adr.id}`}
+            href={href}
             label={
               <Group
                 justify="space-between"
                 align="flex-start"
                 wrap={wrapTitles ? "wrap" : "nowrap"}
               >
-                <Text style={{ flex: 1, minWidth: 0 }} truncate={!wrapTitles}>
-                  {adr.title}
-                </Text>
+                <HighlightedText
+                  text={adr.title}
+                  searchTerms={searchTerms}
+                  style={{ flex: 1, minWidth: 0 }}
+                  truncate={!wrapTitles}
+                />
                 {showDates &&
                   (adr.date ? (
                     <Text size="xs" c="dimmed" style={{ flexShrink: 0 }}>
@@ -165,24 +175,22 @@ export function Sidebar({ directory }: SidebarProps) {
     <AppShell.Navbar p="md">
       <AppShell.Section>
         <Stack gap="md">
-          <Title order={4}>
-            {t("architectureDecisions")}
-          </Title>
-          
+          <Title order={4}>{t("architectureDecisions")}</Title>
+
           {/* Search Box */}
           <SearchBox
             value={searchQuery}
             onChange={setSearchQuery}
+            onClear={clearSearch}
             placeholder={t("search")}
           />
-          
+
           {/* Search Results Counter */}
           {searchQuery.trim() && (
             <Text size="sm" c="dimmed">
-              {hasResults 
-                ? `${resultCount} result${resultCount !== 1 ? 's' : ''} found`
-                : "No results found"
-              }
+              {hasResults
+                ? `${resultCount} result${resultCount !== 1 ? "s" : ""} found`
+                : "No results found"}
             </Text>
           )}
         </Stack>
