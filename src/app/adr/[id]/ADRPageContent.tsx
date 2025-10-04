@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import type React from "react";
+import { useEffect, useState } from "react";
 import { ADRRenderer } from "@/components/ADRRenderer";
 import { useI18n } from "@/hooks/useI18n";
 import type { ADR } from "@/types/adr";
@@ -13,13 +14,17 @@ interface ADRPageContentProps {
 export const ADRPageContent: React.FC<ADRPageContentProps> = ({ adr }) => {
   const { t } = useI18n();
   const searchParams = useSearchParams();
+  const [searchTerms, setSearchTerms] = useState<string[]>([]);
 
-  // Extract search terms from URL params
-  const searchQuery = searchParams.get("search") || "";
-  const searchTerms = searchQuery
-    .trim()
-    .split(/\s+/)
-    .filter((term) => term.length > 0);
+  // Extract search terms from URL params after hydration
+  useEffect(() => {
+    const searchQuery = searchParams.get("search") || "";
+    const terms = searchQuery
+      .trim()
+      .split(/\s+/)
+      .filter((term) => term.length > 0);
+    setSearchTerms(terms);
+  }, [searchParams]);
 
   if (!adr) {
     return (

@@ -8,10 +8,10 @@ import "./globals.css";
 
 import {
   ColorSchemeScript,
-  MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
 import { Layout } from "@/components";
+import { MantineClientProvider } from "@/components/providers/MantineClientProvider";
 import { theme } from "@/lib/theme";
 import { FileService } from "@/services/fileService";
 
@@ -47,9 +47,9 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <MantineProvider theme={theme}>
+        <MantineClientProvider theme={theme}>
           <Layout directory={directory}>{children}</Layout>
-        </MantineProvider>
+        </MantineClientProvider>
       </body>
     </html>
   );
