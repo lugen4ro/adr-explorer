@@ -2,6 +2,8 @@
 
 A GitHub Action that deploys your Architecture Decision Records as a beautiful website using GitHub Pages.
 
+Check out [this repository's page](https://lugen4ro.github.io/adr-explorer/).
+
 <img width="6624" height="3774" alt="CleanShot2025-10-15at18 17 21@2x" src="https://github.com/user-attachments/assets/dec03941-1e3c-4898-a253-46921f8c0ffc" />
 
 
