@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { FileService } from "@/services/fileService";
 import { ADRPageContent } from "./ADRPageContent";
 
@@ -33,7 +34,9 @@ export async function generateMetadata({
     const adr = allADRs.find((adr) => adr.id === decodedId);
 
     return {
-      title: adr ? `${adr.title} - ADR Explorer` : "ADR Not Found - ADR Explorer",
+      title: adr
+        ? `${adr.title} - ADR Explorer`
+        : "ADR Not Found - ADR Explorer",
       description: adr
         ? `Architectural Decision Record: ${adr.title}`
         : "ADR not found",
@@ -55,9 +58,17 @@ export default async function ADRPage({ params }: ADRPageProps) {
     const decodedId = decodeURIComponent(id);
     const adr = allADRs.find((adr) => adr.id === decodedId);
 
-    return <ADRPageContent adr={adr || null} />;
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <ADRPageContent adr={adr || null} />
+      </Suspense>
+    );
   } catch (error) {
     console.error("Error loading ADR page:", error);
-    return <ADRPageContent adr={null} />;
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <ADRPageContent adr={null} />
+      </Suspense>
+    );
   }
 }

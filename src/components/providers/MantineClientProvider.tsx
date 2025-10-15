@@ -1,20 +1,21 @@
 "use client";
 
+import type { MantineThemeOverride } from "@mantine/core";
 import { MantineProvider } from "@mantine/core";
-import type { MantineTheme } from "@mantine/core";
 import type { ReactNode } from "react";
 
 interface MantineClientProviderProps {
   children: ReactNode;
-  theme: MantineTheme;
+  theme: MantineThemeOverride;
 }
 
-export function MantineClientProvider({ children, theme }: MantineClientProviderProps) {
+export function MantineClientProvider({
+  children,
+  theme,
+}: MantineClientProviderProps) {
   return (
     <div suppressHydrationWarning>
-      <MantineProvider theme={theme}>
-        {children}
-      </MantineProvider>
+      <MantineProvider theme={theme}>{children}</MantineProvider>
     </div>
   );
 }
