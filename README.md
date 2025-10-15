@@ -10,6 +10,10 @@ A GitHub Action that deploys your Architecture Decision Records as a beautiful w
 - 🚀 Get started by just adding a single GitHub Actions workflow
 - 🎨 Modern dark theme
 - 📱 Mobile responsive
+- 🔍 Full-text search across ADR titles and content
+- 📊 Dashboard with ADR statistics (total count, status breakdown)
+- 🕒 Recently added ADRs section on homepage
+- ⚙️ Customizable sidebar (show/hide dates, toggle title wrapping)
 
 ## Quick Start
 
