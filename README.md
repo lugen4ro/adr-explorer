@@ -2,7 +2,8 @@
 
 A GitHub Action that deploys your Architecture Decision Records as a beautiful website using GitHub Pages.
 
-<img width="6624" height="3774" alt="CleanShot2025-09-26at10 42 45@2x" src="https://github.com/user-attachments/assets/c7a9d97d-53ae-48bf-94b3-bacf736a7e50" />
+<img width="6624" height="3774" alt="CleanShot2025-10-15at18 17 21@2x" src="https://github.com/user-attachments/assets/dec03941-1e3c-4898-a253-46921f8c0ffc" />
+
 
 ## Features
 
@@ -58,6 +59,7 @@ Accepted
 
 We will use PostgreSQL...
 ```
+The supported format is mainly the one of [adr-tools](https://github.com/npryce/adr-tools).
 
 Your site will be live at `https://username.github.io/repository-name/`
 For example for this repository it is [https://lugen4ro.github.io/adr-explorer/](https://lugen4ro.github.io/adr-explorer/)
