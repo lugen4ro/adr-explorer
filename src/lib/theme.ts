@@ -3,6 +3,7 @@ import { createTheme } from "@mantine/core";
 export const theme = createTheme({
   fontFamily: "var(--font-geist-sans)",
   fontFamilyMonospace: "var(--font-geist-mono)",
+  defaultColorScheme: "dark",
   headings: {
     fontFamily: "var(--font-geist-sans)",
   },
