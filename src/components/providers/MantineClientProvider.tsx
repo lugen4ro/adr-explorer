@@ -15,7 +15,9 @@ export function MantineClientProvider({
 }: MantineClientProviderProps) {
   return (
     <div suppressHydrationWarning>
-      <MantineProvider theme={theme}>{children}</MantineProvider>
+      <MantineProvider theme={theme} defaultColorScheme="dark">
+        {children}
+      </MantineProvider>
     </div>
   );
 }
