@@ -63,13 +63,30 @@ export class FileService implements IFileService {
    *
    * Scans the `content/{basePath}` directory recursively for markdown files,
    * parsing each one as an ADR and organizing them into a tree structure.
+   * If `tmp/adr/` exists, it takes precedence over `content/{basePath}` for testing purposes.
    *
    * @returns Promise that resolves to the root ADRDirectory containing all discovered ADRs
    * @throws Error if the base path cannot be accessed or parsed
    */
   private async discoverADRs(): Promise<ADRDirectory> {
-    const docsPath = path.join(process.cwd(), "content", this.basePath);
+    const docsPath = await this.resolveADRPath();
     return await this.scanDirectory(docsPath, "root");
+  }
+
+  /**
+   * Resolves the ADR directory path, preferring tmp/adr/ if it exists for testing.
+   *
+   * @returns Promise that resolves to the absolute path to use for ADR discovery
+   * @private
+   */
+  private async resolveADRPath(): Promise<string> {
+    const tmpPath = path.join(process.cwd(), "tmp", "adr");
+    try {
+      await fs.access(tmpPath);
+      return tmpPath;
+    } catch {
+      return path.join(process.cwd(), "content", this.basePath);
+    }
   }
 
   /**
@@ -195,7 +212,7 @@ export class FileService implements IFileService {
    */
   private async copyImagesToPublic(): Promise<void> {
     try {
-      const contentPath = path.join(process.cwd(), "content", this.basePath);
+      const contentPath = await this.resolveADRPath();
       const publicPath = path.join(process.cwd(), "public", this.basePath);
 
       await this.copyImagesRecursively(contentPath, publicPath);

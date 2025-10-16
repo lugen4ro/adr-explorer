@@ -42,3 +42,7 @@ next-env.d.ts
 
 # since we have temporary files here
 content/**
+public/adr
+
+# temporary location for adr files for testing purposes
+tmp/adr

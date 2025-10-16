@@ -27,7 +27,7 @@ export class ParseService implements IParseService {
     const { title, status, date } = this.parseMetadata(content, fileName);
 
     return {
-      id: fileName.replace(".md", ""),
+      id: this.generateId(fileName),
       title,
       status,
       date,
@@ -35,6 +35,45 @@ export class ParseService implements IParseService {
       content: this.transformImagePaths(content, filePath),
       category: this.extractCategory(filePath),
     };
+  }
+
+  /**
+   * Generates a safe ASCII-only ID from a filename using hash.
+   * Format: {date}-{hash} where hash is derived from the full filename.
+   * This avoids all URL encoding issues with Japanese characters.
+   *
+   * @param fileName - Original filename
+   * @returns Safe ASCII ID that won't cause encoding or length errors
+   */
+  private generateId(fileName: string): string {
+    const nameWithoutExt = fileName.replace(".md", "");
+    const dateMatch = nameWithoutExt.match(/^(\d{8}|\d{4}-\d{2}-\d{2})/);
+
+    const hash = this.simpleHash(nameWithoutExt);
+
+    if (dateMatch) {
+      const datePrefix = dateMatch[1];
+      return `${datePrefix}-${hash}`;
+    }
+
+    return hash;
+  }
+
+  /**
+   * Simple hash function to generate a short ASCII identifier from a string.
+   * Uses a basic hash algorithm to create an 8-character hex string.
+   *
+   * @param str - String to hash
+   * @returns 8-character hex hash
+   */
+  private simpleHash(str: string): string {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = (hash << 5) - hash + char;
+      hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(8, "0").substring(0, 8);
   }
 
   /**

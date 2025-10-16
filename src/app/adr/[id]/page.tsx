@@ -15,7 +15,7 @@ export async function generateStaticParams() {
     const { allADRs } = await fileService.getAllADRs();
 
     return allADRs.map((adr) => ({
-      id: encodeURIComponent(adr.id),
+      id: adr.id,
     }));
   } catch (error) {
     console.error("Error generating static params:", error);
@@ -30,8 +30,7 @@ export async function generateMetadata({
     const fileService = new FileService("adr");
     const { allADRs } = await fileService.getAllADRs();
     const { id } = await params;
-    const decodedId = decodeURIComponent(id);
-    const adr = allADRs.find((adr) => adr.id === decodedId);
+    const adr = allADRs.find((adr) => adr.id === id);
 
     return {
       title: adr
@@ -55,8 +54,7 @@ export default async function ADRPage({ params }: ADRPageProps) {
     const fileService = new FileService("adr");
     const { allADRs } = await fileService.getAllADRs();
     const { id } = await params;
-    const decodedId = decodeURIComponent(id);
-    const adr = allADRs.find((adr) => adr.id === decodedId);
+    const adr = allADRs.find((adr) => adr.id === id);
 
     return (
       <Suspense fallback={<div>Loading...</div>}>
